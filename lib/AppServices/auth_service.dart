@@ -1,0 +1,127 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+class AuthService {
+  FirebaseFirestore _db = FirebaseFirestore.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  User? user;
+
+  AuthService() {
+    user = auth.currentUser;
+  }
+
+  Future<void> register(
+      firstName, lastName, emailText, pass, context, _messangerKey) async {
+    try {
+      final credential = await auth
+          .createUserWithEmailAndPassword(email: emailText, password: pass)
+          .then((value) =>
+              print('user with user id ${value.user!.uid} is logged in'));
+
+      bool addData = await sendToDB(firstName, lastName, emailText);
+
+      if (addData == true) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            '/homepage', (Route<dynamic> route) => false);
+      } else {
+        error('Error signing up user.', _messangerKey);
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        error('The password provided is too weak.', _messangerKey);
+      } else if (e.code == 'email-already-in-use') {
+        final User? user = auth.currentUser;
+        if (user!.uid.isNotEmpty) {
+          bool userExist = await doesUserExist(user.uid);
+          if (userExist == true) {
+            error('The account already exists for that email.', _messangerKey);
+          } else {
+            bool addData = await sendToDB(firstName, lastName, emailText);
+            print('add data ${addData.toString()}');
+            if (addData == true) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/homepage', (Route<dynamic> route) => false);
+            } else {
+              error('Error signing up user.', _messangerKey);
+            }
+          }
+        } else {
+          error('The account already exists for that email.', _messangerKey);
+        }
+      } else if (e.code == 'invalid-email') {
+        error('Invalid Email', _messangerKey);
+      } else {
+        error(e.message, _messangerKey);
+        print(e);
+      }
+    } catch (e) {
+      error(e, _messangerKey);
+    }
+  }
+
+  Future<bool> sendToDB(firstname, lastname, email) async {
+    final User? user = auth.currentUser;
+    if (user!.uid.isNotEmpty) {
+      try {
+        DocumentReference<Map<String, dynamic>> users =
+            FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+        await users.set({
+          "firstname": firstname,
+          "lastname": lastname,
+          "email": email,
+          "userId": user.uid,
+          "accountCreationDate": DateTime.now()
+        });
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  Future<bool> doesUserExist(String uid) async {
+    final dynamic values = await FirebaseFirestore.instance
+        .collection("users")
+        .where('userId', isEqualTo: uid)
+        .limit(1)
+        .get();
+
+    if (values.size >= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool checkIfLoggedIn2(context) {
+    final User? user = auth.currentUser;
+
+    if (user?.uid.isEmpty == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  void error(errorMessage, _messangerKey) {
+    _messangerKey.currentState!.showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.red[600],
+        duration: const Duration(seconds: 5),
+        elevation: 0,
+        content: Text(
+          errorMessage,
+          textAlign: TextAlign.center,
+        )));
+
+    Timer(Duration(seconds: 5), () {
+      _messangerKey.currentState!.hideCurrentSnackBar();
+    });
+  }
+}

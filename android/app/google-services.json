@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "659770646336",
+    "project_id": "trash-management-c2783",
+    "storage_bucket": "trash-management-c2783.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659770646336:android:6261d0869ca09cfcb064a5",
+        "android_client_info": {
+          "package_name": "com.example.trash_management"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "659770646336-v3m5uofsg94jnqmalasvp4511qcuct38.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBv6c364AuQ0_LRRH91bqHKzkjOQW6jUqw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "659770646336-v3m5uofsg94jnqmalasvp4511qcuct38.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
