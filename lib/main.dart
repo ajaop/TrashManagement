@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:trash_management/fade_demo.dart';
-import 'package:trash_management/logo_app.dart';
+import 'package:trash_management/OnboardingFeature/onboarding_animation.dart';
 import 'firebase_options.dart';
 import 'AppServices/auth_service.dart';
 import 'AuthenticationFeature/signin.dart';
 import 'AuthenticationFeature/signup.dart';
 import 'homepage.dart';
-import 'onboarding.dart';
+import 'OnboardingFeature/onboarding.dart';
 
 int? isviewed;
 Future<void> main() async {
@@ -42,7 +41,7 @@ class MyApp extends StatelessWidget {
     // });
 
     return MaterialApp(initialRoute: '/', routes: {
-      '/': (context) => const StaggerDemo(),
+      '/': (context) => const OnboardingPage(),
     });
   }
 }

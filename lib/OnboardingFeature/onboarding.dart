@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'fade_demo.dart';
+import 'onboarding_animation.dart';
 
-class StaggerDemo extends StatefulWidget {
-  const StaggerDemo({Key? key}) : super(key: key);
+class OnboardingPage extends StatefulWidget {
+  const OnboardingPage({Key? key}) : super(key: key);
 
   @override
-  State<StaggerDemo> createState() => _StaggerDemoState();
+  State<OnboardingPage> createState() => _OnboardingPageState();
 }
 
-class _StaggerDemoState extends State<StaggerDemo>
+class _OnboardingPageState extends State<OnboardingPage>
     with TickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -19,6 +19,8 @@ class _StaggerDemoState extends State<StaggerDemo>
 
     _controller = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
+
+    _playAnimation();
   }
 
   @override
@@ -30,7 +32,7 @@ class _StaggerDemoState extends State<StaggerDemo>
   Future<void> _playAnimation() async {
     try {
       await _controller.forward().orCancel;
-      await _controller.reverse().orCancel;
+      // await _controller.reverse().orCancel;
     } on TickerCanceled {
       // the animation got canceled, probably because it was disposed of
     }
@@ -38,14 +40,7 @@ class _StaggerDemoState extends State<StaggerDemo>
 
   @override
   Widget build(BuildContext context) {
-    var timeDilation = 10.0;
-
     return Scaffold(
-        body: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              _playAnimation();
-            },
-            child: Center(child: StaggerAnimation(controller: _controller))));
+        body: Center(child: OnboardingAnimation(controller: _controller)));
   }
 }
