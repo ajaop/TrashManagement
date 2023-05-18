@@ -14,6 +14,12 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       scaffoldMessengerKey: _messangerKey,
+      theme: ThemeData().copyWith(
+        scaffoldBackgroundColor: Color(0xffEEF7F0),
+        colorScheme:
+            ThemeData().colorScheme.copyWith(primary: Color(0xff95C2A1)),
+      ),
+      home: Scaffold(),
     );
   }
 }

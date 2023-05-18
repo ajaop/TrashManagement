@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:trash_management/fade_demo.dart';
+import 'package:trash_management/logo_app.dart';
 import 'firebase_options.dart';
 import 'AppServices/auth_service.dart';
 import 'AuthenticationFeature/signin.dart';
@@ -10,6 +12,8 @@ import 'onboarding.dart';
 
 int? isviewed;
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -27,14 +31,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthService authService = AuthService();
 
+    // return MaterialApp(initialRoute: '/', routes: {
+    //   '/': (context) => isviewed == 0 || isviewed == null
+    //       ? const OnBoardingPage()
+    //       : authService.checkIfLoggedIn2(context)
+    //           ? HomePage()
+    //           : SignIn(),
+    //   '/homepage': (context) => const HomePage(),
+    //   '/signup': (context) => const SignUp(),
+    // });
+
     return MaterialApp(initialRoute: '/', routes: {
-      '/': (context) => isviewed == 0 || isviewed == null
-          ? const OnBoardingPage()
-          : authService.checkIfLoggedIn2(context)
-              ? HomePage()
-              : SignIn(),
-      '/homepage': (context) => const HomePage(),
-      '/signup': (context) => const SignUp(),
+      '/': (context) => const StaggerDemo(),
     });
   }
 }
