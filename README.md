@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # trash_management
 
 A new Flutter project.
@@ -14,3 +15,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# TrashManagement
+A mobile app meant to help with disposing and recycling trash 
+>>>>>>> 8282f7ee3d72efaaa74c521fdfabb0b15b5d2e5e
