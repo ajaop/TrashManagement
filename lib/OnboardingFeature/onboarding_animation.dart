@@ -93,6 +93,10 @@ class OnboardingAnimation extends StatelessWidget {
             ),
           ),
         ),
+        textAnim = CurvedAnimation(
+          parent: controller,
+          curve: Curves.easeIn,
+        ),
         super(key: key);
 
   final AnimationController controller;
@@ -103,6 +107,7 @@ class OnboardingAnimation extends StatelessWidget {
   final Animation<BorderRadius?> borderRadius;
   final Animation<Color?> color;
   final Animation<Alignment> alignment;
+  final Animation<double> textAnim;
 
   Widget _buildAnimation(BuildContext context, Widget? child) {
     return Scaffold(
@@ -120,22 +125,20 @@ class OnboardingAnimation extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: color.value,
                     borderRadius: borderRadius.value,
-                    image: controller.isCompleted
-                        ? DecorationImage(
-                            image: AssetImage('images/onboarding_img.jpg'),
-                            fit: BoxFit.contain,
-                          )
-                        : null,
+                    image: DecorationImage(
+                      image: AssetImage('images/onboarding_img.jpg'),
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               )),
         ),
-        Visibility(
-          visible: controller.isCompleted,
-          child: Expanded(
-              child: ListView(
+        Expanded(
+            child: FadeTransition(
+          opacity: textAnim,
+          child: ListView(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 40.0,
               ),
               const Align(
@@ -173,8 +176,8 @@ class OnboardingAnimation extends StatelessWidget {
                     child: const Text('Get Started')),
               )
             ],
-          )),
-        )
+          ),
+        ))
       ],
     ));
   }

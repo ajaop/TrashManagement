@@ -32,7 +32,7 @@ class _OnboardingPageState extends State<OnboardingPage>
   Future<void> _playAnimation() async {
     try {
       await _controller.forward().orCancel;
-      // await _controller.reverse().orCancel;
+      //await _controller.reverse().orCancel;
     } on TickerCanceled {
       // the animation got canceled, probably because it was disposed of
     }
