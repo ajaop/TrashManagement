@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:trash_management/OnboardingFeature/onboarding_animation.dart';
+import 'package:trash_management/loader_animation.dart';
 import 'firebase_options.dart';
 import 'AppServices/auth_service.dart';
 import 'AuthenticationFeature/signin.dart';
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
     // });
 
     return MaterialApp(initialRoute: '/', routes: {
-      '/': (context) => const OnboardingPage(),
+      '/': (context) => const Loader(),
     });
   }
 }

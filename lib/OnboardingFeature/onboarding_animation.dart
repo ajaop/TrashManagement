@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../AuthenticationFeature/signup.dart';
 
 class OnboardingAnimation extends StatelessWidget {
   OnboardingAnimation({Key? key, required this.controller})
@@ -110,6 +112,12 @@ class OnboardingAnimation extends StatelessWidget {
   final Animation<double> textAnim;
 
   Widget _buildAnimation(BuildContext context, Widget? child) {
+    _storeOnboardInfo() async {
+      int isViewed = 1;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('onBoard', isViewed);
+    }
+
     return Scaffold(
         body: Column(
       children: [
@@ -165,14 +173,20 @@ class OnboardingAnimation extends StatelessWidget {
                 padding: const EdgeInsets.all(20.0),
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        primary: Color(0xff2E5F3B),
+                        primary: Color(0xFF2E5F3B),
                         minimumSize: const Size.fromHeight(65),
                         textStyle: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontFamily: 'OpenSans',
                             fontWeight: FontWeight.bold)),
-                    onPressed: () {},
+                    onPressed: () {
+                      _storeOnboardInfo();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => const SignUp())));
+                    },
                     child: const Text('Get Started')),
               )
             ],
