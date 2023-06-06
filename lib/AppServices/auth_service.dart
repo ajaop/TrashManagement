@@ -4,6 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../AuthenticationFeature/signup.dart';
+import '../Models/user_details.dart';
+
 class AuthService {
   FirebaseFirestore _db = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -59,6 +62,46 @@ class AuthService {
       }
     } catch (e) {
       error(e, _messangerKey);
+    }
+  }
+
+  Future<void> login(username, pass, context, _messangerKey) async {
+    final userDet = UserDetails(username, pass);
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    try {
+      await auth
+          .signInWithEmailAndPassword(email: username, password: pass)
+          .then((value) async {
+        user = auth.currentUser;
+        bool userExist = await doesUserExist(user!.uid);
+        if (userExist == true) {
+          Navigator.pushReplacementNamed(context, '/homepage');
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const SignUp(),
+                  settings: RouteSettings(arguments: userDet)));
+        }
+      });
+
+      dynamic id = user!.uid;
+      print("User with $id is logged in");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found' ||
+          e.code == 'wrong-password' ||
+          e.code == 'invalid-email') {
+        print('No user found');
+        error('Wrong email or password.', _messangerKey);
+      } else if (e.code == 'too-many-requests') {
+        error(
+            'Account has been temporarily disabled due to too many failed attempts.',
+            _messangerKey);
+      } else {
+        print(e);
+        error(e.message, _messangerKey);
+      }
     }
   }
 
