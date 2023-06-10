@@ -11,6 +11,7 @@ class AuthService {
   FirebaseFirestore _db = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
   User? user;
+  bool doesExist = true;
 
   AuthService() {
     user = auth.currentUser;
@@ -38,7 +39,7 @@ class AuthService {
       } else if (e.code == 'email-already-in-use') {
         final User? user = auth.currentUser;
         if (user!.uid.isNotEmpty) {
-          bool userExist = await doesUserExist(user.uid);
+          bool userExist = await doesUserExist(user.uid, _messangerKey);
           if (userExist == true) {
             error('The account already exists for that email.', _messangerKey);
           } else {
@@ -74,7 +75,7 @@ class AuthService {
           .signInWithEmailAndPassword(email: username, password: pass)
           .then((value) async {
         user = auth.currentUser;
-        bool userExist = await doesUserExist(user!.uid);
+        bool userExist = await doesUserExist(user!.uid, _messangerKey);
         if (userExist == true) {
           Navigator.pushReplacementNamed(context, '/homepage');
         } else {
@@ -128,24 +129,34 @@ class AuthService {
     return false;
   }
 
-  Future<bool> doesUserExist(String uid) async {
-    final dynamic values = await FirebaseFirestore.instance
-        .collection("users")
-        .where('userId', isEqualTo: uid)
-        .limit(1)
-        .get();
+  Future<bool> doesUserExist(String uid, messengerKey) async {
+    try {
+      final dynamic values = await FirebaseFirestore.instance
+          .collection("users")
+          .where('userId', isEqualTo: uid)
+          .limit(1)
+          .get();
 
-    if (values.size >= 1) {
-      return true;
-    } else {
+      if (values.size >= 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      error(e.toString(), messengerKey);
       return false;
     }
   }
 
-  bool checkIfLoggedIn2(context) {
-    final User? user = auth.currentUser;
+  Future<void> getExist(messengerKey) async {
+    doesExist = await doesUserExist(user!.uid, messengerKey);
+  }
 
-    if (user?.uid.isEmpty == null) {
+  bool checkIfLoggedIn(context, messengerKey) {
+    final User? user = auth.currentUser;
+    getExist(messengerKey);
+
+    if (user?.uid.isEmpty == null || doesExist == false) {
       return false;
     } else {
       return true;
