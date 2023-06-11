@@ -6,7 +6,7 @@ import 'firebase_options.dart';
 import 'AppServices/auth_service.dart';
 import 'AuthenticationFeature/signin.dart';
 import 'AuthenticationFeature/signup.dart';
-import 'homepage.dart';
+import 'Screens/homepage.dart';
 import 'OnboardingFeature/onboarding.dart';
 
 final _messangerKey = GlobalKey<ScaffoldMessengerState>();
@@ -32,6 +32,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthService authService = AuthService();
 
+    authService.auth.signOut();
+
     return MaterialApp(
         scaffoldMessengerKey: _messangerKey,
         initialRoute: '/',
@@ -43,6 +45,7 @@ class MyApp extends StatelessWidget {
                   : SignIn(),
           '/homepage': (context) => const HomePage(),
           '/signup': (context) => const SignUp(),
+          '/signin': (context) => const SignIn(),
         });
   }
 }

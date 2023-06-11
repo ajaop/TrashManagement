@@ -35,6 +35,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    getUserValues();
     return MaterialApp(
         scaffoldMessengerKey: _messangerKey,
         theme: ThemeData(
@@ -64,6 +65,7 @@ class _SignUpState extends State<SignUp> {
                                       .textTheme
                                       .headline3!
                                       .copyWith(
+                                          fontSize: 4.0,
                                           color: Color(0xff1B3823),
                                           fontWeight: FontWeight.bold),
                                 ),

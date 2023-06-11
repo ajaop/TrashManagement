@@ -31,6 +31,7 @@ class AuthService {
         Navigator.of(context).pushNamedAndRemoveUntil(
             '/homepage', (Route<dynamic> route) => false);
       } else {
+        auth.signOut();
         error('Error signing up user.', _messangerKey);
       }
     } on FirebaseAuthException catch (e) {
@@ -49,6 +50,7 @@ class AuthService {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/homepage', (Route<dynamic> route) => false);
             } else {
+              auth.signOut();
               error('Error signing up user.', _messangerKey);
             }
           }
@@ -57,6 +59,8 @@ class AuthService {
         }
       } else if (e.code == 'invalid-email') {
         error('Invalid Email', _messangerKey);
+      } else if (e.code == 'network-request-failed') {
+        error('Network Error', _messangerKey);
       } else {
         error(e.message, _messangerKey);
         print(e);
@@ -99,8 +103,10 @@ class AuthService {
         error(
             'Account has been temporarily disabled due to too many failed attempts.',
             _messangerKey);
+      } else if (e.code == 'network-request-failed') {
+        error('Network Error', _messangerKey);
       } else {
-        print(e);
+        print(e.code);
         error(e.message, _messangerKey);
       }
     }
@@ -148,15 +154,10 @@ class AuthService {
     }
   }
 
-  Future<void> getExist(messengerKey) async {
-    doesExist = await doesUserExist(user!.uid, messengerKey);
-  }
-
   bool checkIfLoggedIn(context, messengerKey) {
     final User? user = auth.currentUser;
-    getExist(messengerKey);
 
-    if (user?.uid.isEmpty == null || doesExist == false) {
+    if (user?.uid.isEmpty == null) {
       return false;
     } else {
       return true;
