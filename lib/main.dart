@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
     AuthService authService = AuthService();
 
     authService.auth.signOut();
-
     return MaterialApp(
         scaffoldMessengerKey: _messangerKey,
         initialRoute: '/',

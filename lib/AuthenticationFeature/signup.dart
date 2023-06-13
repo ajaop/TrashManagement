@@ -21,6 +21,7 @@ class _SignUpState extends State<SignUp> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   AuthService authService = AuthService();
+  List<String> genderList = <String>['Male', 'Female'];
   String buttonText = 'Create Account', titleText = 'Sign Up';
   bool _obscureText = true, _loading = false, _userSigningUp = true;
 
@@ -35,6 +36,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    String _currentSelectedValue = genderList.first;
     getUserValues();
     return MaterialApp(
         scaffoldMessengerKey: _messangerKey,
@@ -65,7 +67,6 @@ class _SignUpState extends State<SignUp> {
                                       .textTheme
                                       .headline3!
                                       .copyWith(
-                                          fontSize: 4.0,
                                           color: Color(0xff1B3823),
                                           fontWeight: FontWeight.bold),
                                 ),
@@ -244,6 +245,47 @@ class _SignUpState extends State<SignUp> {
                                   }
                                 },
                               ),
+                              const SizedBox(
+                                height: 25.0,
+                              ),
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Gender',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge!
+                                        .copyWith(
+                                            fontSize: 16.0,
+                                            color: Color(0xff1B3823)),
+                                  )),
+                              const SizedBox(
+                                height: 5.0,
+                              ),
+                              DropdownButtonFormField<String>(
+                                  value: _currentSelectedValue,
+                                  dropdownColor: Color(0xffEEF7F0),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  elevation: 16,
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 16.0),
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      _currentSelectedValue = value!;
+                                    });
+                                  },
+                                  items: genderList
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0)))),
                               const SizedBox(
                                 height: 50.0,
                               ),
