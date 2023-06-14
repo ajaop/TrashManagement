@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 
 import '../AppServices/auth_service.dart';
 import '../Models/user_details.dart';
@@ -21,8 +24,9 @@ class _SignUpState extends State<SignUp> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   AuthService authService = AuthService();
-  List<String> genderList = <String>['Male', 'Female'];
-  String buttonText = 'Create Account', titleText = 'Sign Up';
+  String buttonText = 'Create Account',
+      titleText = 'Sign Up',
+      selectedGender = '';
   bool _obscureText = true, _loading = false, _userSigningUp = true;
 
   @override
@@ -36,7 +40,6 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    String _currentSelectedValue = genderList.first;
     getUserValues();
     return MaterialApp(
         scaffoldMessengerKey: _messangerKey,
@@ -262,30 +265,35 @@ class _SignUpState extends State<SignUp> {
                               const SizedBox(
                                 height: 5.0,
                               ),
-                              DropdownButtonFormField<String>(
-                                  value: _currentSelectedValue,
-                                  dropdownColor: Color(0xffEEF7F0),
-                                  icon: const Icon(Icons.arrow_drop_down),
-                                  elevation: 16,
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 16.0),
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      _currentSelectedValue = value!;
-                                    });
-                                  },
-                                  items: genderList
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0)))),
+                              DropDownTextField(
+                                listSpace: 20,
+                                listPadding: ListPadding(top: 20),
+                                enableSearch: false,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Gender Required";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                textFieldDecoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0))),
+                                dropDownList: const [
+                                  DropDownValueModel(
+                                      name: 'Male', value: "Male"),
+                                  DropDownValueModel(
+                                      name: 'Female', value: "Female"),
+                                ],
+                                listTextStyle:
+                                    const TextStyle(color: Colors.black),
+                                dropDownItemCount: 2,
+                                onChanged: (val) {
+                                  selectedGender = val.value;
+                                  print(selectedGender);
+                                },
+                              ),
                               const SizedBox(
                                 height: 50.0,
                               ),
@@ -307,6 +315,17 @@ class _SignUpState extends State<SignUp> {
                                               _loading = true;
                                             });
 
+                                            var rng = Random().nextInt(2) + 1;
+                                            String imgUrl;
+                                            if (selectedGender == 'Male') {
+                                              imgUrl = 'images/man' +
+                                                  rng.toString() +
+                                                  '.png';
+                                            } else {
+                                              imgUrl = 'images/woman' +
+                                                  rng.toString() +
+                                                  '.png';
+                                            }
                                             await authService.register(
                                                 _firstNameController.text
                                                     .toString(),
@@ -316,6 +335,8 @@ class _SignUpState extends State<SignUp> {
                                                     .toString(),
                                                 _passwordController.text
                                                     .toString(),
+                                                selectedGender,
+                                                imgUrl,
                                                 context,
                                                 _messangerKey);
 
