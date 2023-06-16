@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:trash_management/loader_animation.dart';
+import 'package:trash_management/AppServices/database_service.dart';
 import 'firebase_options.dart';
 import 'AppServices/auth_service.dart';
 import 'AuthenticationFeature/signin.dart';
 import 'AuthenticationFeature/signup.dart';
 import 'Screens/homepage.dart';
 import 'OnboardingFeature/onboarding.dart';
+import 'package:provider/provider.dart';
 
 final _messangerKey = GlobalKey<ScaffoldMessengerState>();
 int? isviewed;
@@ -31,8 +32,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthService authService = AuthService();
+    DatabaseService databaseService = DatabaseService();
 
-    authService.auth.signOut();
+    // authService.auth.signOut();
     return MaterialApp(
         scaffoldMessengerKey: _messangerKey,
         initialRoute: '/',
