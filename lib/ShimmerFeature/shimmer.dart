@@ -17,12 +17,5 @@ class Shimmer extends StatefulWidget {
   final Widget? child;
 
   @override
-  State<Shimmer> createState() => _ShimmerState();
-}
-
-class _ShimmerState extends State<Shimmer> {
-  @override
-  Widget build(BuildContext context) {
-    return widget.child ?? const SizedBox();
-  }
+  ShimmerState createState() => ShimmerState();
 }

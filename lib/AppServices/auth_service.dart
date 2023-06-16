@@ -73,7 +73,7 @@ class AuthService {
   }
 
   Future<void> login(username, pass, context, _messangerKey) async {
-    final userDet = UserDetails(username, pass);
+    final userDet = UserDetails.signin(email: username, password: pass);
     FirebaseAuth auth = FirebaseAuth.instance;
 
     try {
@@ -121,15 +121,16 @@ class AuthService {
         DocumentReference<Map<String, dynamic>> users =
             FirebaseFirestore.instance.collection('users').doc(user.uid);
 
-        await users.set({
-          "firstname": firstname,
-          "lastname": lastname,
-          "email": email,
-          "gender": gender,
-          "profileImageUrl": profileUrl,
-          "userId": user.uid,
-          "accountCreationDate": DateTime.now()
-        });
+        UserDetails userDetails = UserDetails(
+            firstname: firstname,
+            lastname: lastname,
+            email: email,
+            gender: gender,
+            profileImageUrl: profileUrl,
+            userId: user.uid,
+            accountCreationDate: DateTime.now());
+
+        await users.set(userDetails.createMap());
         return true;
       } catch (e) {
         return false;

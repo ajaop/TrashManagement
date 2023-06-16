@@ -291,7 +291,6 @@ class _SignUpState extends State<SignUp> {
                                 dropDownItemCount: 2,
                                 onChanged: (val) {
                                   selectedGender = val.value;
-                                  print(selectedGender);
                                 },
                               ),
                               const SizedBox(
@@ -315,17 +314,6 @@ class _SignUpState extends State<SignUp> {
                                               _loading = true;
                                             });
 
-                                            var rng = Random().nextInt(2) + 1;
-                                            String imgUrl;
-                                            if (selectedGender == 'Male') {
-                                              imgUrl = 'images/man' +
-                                                  rng.toString() +
-                                                  '.png';
-                                            } else {
-                                              imgUrl = 'images/woman' +
-                                                  rng.toString() +
-                                                  '.png';
-                                            }
                                             await authService.register(
                                                 _firstNameController.text
                                                     .toString(),
@@ -336,7 +324,7 @@ class _SignUpState extends State<SignUp> {
                                                 _passwordController.text
                                                     .toString(),
                                                 selectedGender,
-                                                imgUrl,
+                                                getImage(),
                                                 context,
                                                 _messangerKey);
 
@@ -384,13 +372,25 @@ class _SignUpState extends State<SignUp> {
       final userDetails =
           ModalRoute.of(context)!.settings.arguments as UserDetails;
 
-      _emailController.text = userDetails.email;
-      _passwordController.text = userDetails.password;
+      _emailController.text = userDetails.email!;
+      _passwordController.text = userDetails.password!;
       setState(() {
         _userSigningUp = false;
         titleText = 'Complete Sign Up';
         buttonText = 'Submit';
       });
     }
+  }
+
+  String getImage() {
+    var rng = Random().nextInt(2) + 1;
+    String imgUrl;
+    if (selectedGender == 'Male') {
+      imgUrl = 'images/man' + rng.toString() + '.png';
+    } else {
+      imgUrl = 'images/woman' + rng.toString() + '.png';
+    }
+
+    return imgUrl;
   }
 }
