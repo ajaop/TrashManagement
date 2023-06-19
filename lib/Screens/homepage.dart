@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:provider/provider.dart';
 import '../AppServices/auth_service.dart';
+import '../AppServices/database_service.dart';
 import 'dashboard.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,6 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _messangerKey = GlobalKey<ScaffoldMessengerState>();
   final AuthService authService = AuthService();
+  DatabaseService databaseService = DatabaseService();
   int _index = 0;
 
   @override

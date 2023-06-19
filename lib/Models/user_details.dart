@@ -35,7 +35,7 @@ class UserDetails {
     };
   }
 
-  UserDetails.fromFirestore(DocumentSnapshot<Map<String, dynamic>> firestoreMap)
+  UserDetails.fromFirestore(Map<String, dynamic> firestoreMap)
       : firstname = firestoreMap['firstname'],
         lastname = firestoreMap['lastname'],
         email = firestoreMap['email'],

@@ -3,34 +3,29 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:trash_management/AppServices/auth_service.dart';
 
 import '../Models/user_details.dart';
 
 class DatabaseService {
-  FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
+  AuthService authService = AuthService();
   User? user;
 
   DatabaseService() {
     user = auth.currentUser;
   }
 
-  Stream<List<UserDetails>> getUserDetails() {
-    Future<QuerySnapshot<Map<String, dynamic>>> snapshot = FirebaseFirestore
-        .instance
+  Stream<UserDetails> getUserDetails() {
+    return _db
         .collection("users")
         .where('userId', isEqualTo: user!.uid)
         .limit(1)
-        .get();
-
-    return snapshot
-        .map((docSnapshot) => UserDetails.fromFirestore(docSnapshot))
-        .toList();
-
-    return _db.collection('Products').snapshots().map((snapshot) => snapshot
-        .documents
-        .map((document) => Product.fromFirestore(document.data))
-        .toList());
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((document) => UserDetails.fromFirestore(document.data()))
+            .first);
   }
 
   void displayError(errorMessage, _messangerKey) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:trash_management/AppServices/database_service.dart';
+import 'package:trash_management/Models/user_details.dart';
 import 'firebase_options.dart';
 import 'AppServices/auth_service.dart';
 import 'AuthenticationFeature/signin.dart';
@@ -33,20 +34,29 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthService authService = AuthService();
     DatabaseService databaseService = DatabaseService();
+    UserDetails initial = UserDetails.dashboard();
 
     // authService.auth.signOut();
-    return MaterialApp(
-        scaffoldMessengerKey: _messangerKey,
-        initialRoute: '/',
-        routes: {
-          '/': (context) => isviewed == 0 || isviewed == null
-              ? const OnboardingPage()
-              : authService.checkIfLoggedIn(context, _messangerKey)
-                  ? HomePage()
-                  : SignIn(),
-          '/homepage': (context) => const HomePage(),
-          '/signup': (context) => const SignUp(),
-          '/signin': (context) => const SignIn(),
-        });
+    return MultiProvider(
+      providers: [
+        StreamProvider<UserDetails>(
+          create: (context) => databaseService.getUserDetails(),
+          initialData: initial,
+        ),
+      ],
+      child: MaterialApp(
+          scaffoldMessengerKey: _messangerKey,
+          initialRoute: '/',
+          routes: {
+            '/': (context) => isviewed == 0 || isviewed == null
+                ? const OnboardingPage()
+                : authService.checkIfLoggedIn(context, _messangerKey)
+                    ? HomePage()
+                    : SignIn(),
+            '/homepage': (context) => const HomePage(),
+            '/signup': (context) => const SignUp(),
+            '/signin': (context) => const SignIn(),
+          }),
+    );
   }
 }
