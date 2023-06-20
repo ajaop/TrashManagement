@@ -127,6 +127,7 @@ class AuthService {
             email: email,
             gender: gender,
             profileImageUrl: profileUrl,
+            points: 0,
             userId: user.uid,
             accountCreationDate: DateTime.now());
 

@@ -7,6 +7,7 @@ class UserDetails {
   String? password;
   String? gender;
   String? profileImageUrl;
+  int? points;
   String? userId;
   DateTime? accountCreationDate;
 
@@ -16,6 +17,7 @@ class UserDetails {
       required this.email,
       required this.gender,
       required this.profileImageUrl,
+      required this.points,
       required this.userId,
       required this.accountCreationDate});
 
@@ -30,6 +32,7 @@ class UserDetails {
       'email': email,
       'gender': gender,
       'profileImageUrl': profileImageUrl,
+      'points': points,
       'userId': userId,
       'accountCreationDate': accountCreationDate
     };
@@ -41,6 +44,7 @@ class UserDetails {
         email = firestoreMap['email'],
         gender = firestoreMap['gender'],
         profileImageUrl = firestoreMap['profileImageUrl'],
+        points = firestoreMap['points'],
         userId = firestoreMap['userId'],
         accountCreationDate = firestoreMap['accountCreationDate'].toDate();
 }
