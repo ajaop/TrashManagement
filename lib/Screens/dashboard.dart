@@ -5,6 +5,8 @@ import 'package:trash_management/ShimmerFeature/shimmer.dart';
 import 'package:trash_management/ShimmerFeature/shimmer_loading.dart';
 import 'package:provider/provider.dart';
 
+import '../CustomExtras/custom_icons_icons.dart';
+
 const _shimmerGradient = LinearGradient(
   colors: [Color(0xFFEBEBF4), Color(0xFFF4F4F4), Color(0xFFEBEBF4)],
   stops: [
@@ -281,11 +283,11 @@ class Dashboard extends StatelessWidget {
                         child: InkWell(
                           child: Column(
                             children: [
-                              CircleAvatar(
+                              const CircleAvatar(
                                 backgroundColor: Color(0xffC9E4D0),
                                 radius: 40,
                                 child: Icon(
-                                  Icons.recycling_outlined,
+                                  CustomIcons.recycle,
                                   color: Color(0xff1B3823),
                                 ),
                               ),
