@@ -5,7 +5,7 @@ import 'package:trash_management/ShimmerFeature/shimmer.dart';
 import 'package:trash_management/ShimmerFeature/shimmer_loading.dart';
 import 'package:provider/provider.dart';
 
-import '../CustomExtras/custom_icons_icons.dart';
+import '../custom_icons_icons.dart';
 
 const _shimmerGradient = LinearGradient(
   colors: [Color(0xFFEBEBF4), Color(0xFFF4F4F4), Color(0xFFEBEBF4)],
