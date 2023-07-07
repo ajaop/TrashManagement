@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:trash_management/AppServices/database_service.dart';
 import 'package:trash_management/Models/user_details.dart';
+import 'package:trash_management/Screens/schedule_waste_page.dart';
 import 'package:trash_management/ShimmerFeature/shimmer.dart';
 import 'package:trash_management/ShimmerFeature/shimmer_loading.dart';
 import 'package:provider/provider.dart';
 
-import '../custom_icons_icons.dart';
+import '../CustomExtras/custom_icons_icons.dart';
 
 const _shimmerGradient = LinearGradient(
   colors: [Color(0xFFEBEBF4), Color(0xFFF4F4F4), Color(0xFFEBEBF4)],
@@ -50,16 +51,19 @@ class Dashboard extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.notifications_outlined,
-                          size: 33.0,
+                          size: 30.0,
                           color: Color(0xff1B3823),
                         ),
-                        Positioned(
-                            bottom: 18,
-                            right: 5,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.red[500],
-                              radius: 5,
-                            )),
+                        Visibility(
+                          visible: false,
+                          child: Positioned(
+                              bottom: 18,
+                              right: 5,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.red[500],
+                                radius: 5,
+                              )),
+                        ),
                       ],
                     ),
                   ],
@@ -213,7 +217,13 @@ class Dashboard extends StatelessWidget {
                                   child: SizedBox(
                                     width: 180.0,
                                     child: ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ScheduleWastePickup()));
+                                        },
                                         style: ElevatedButton.styleFrom(
                                           elevation: 5.0,
                                           primary: Color(0xff1B3823),
@@ -288,6 +298,7 @@ class Dashboard extends StatelessWidget {
                                 radius: 40,
                                 child: Icon(
                                   CustomIcons.recycle,
+                                  size: 35.0,
                                   color: Color(0xff1B3823),
                                 ),
                               ),
@@ -328,11 +339,14 @@ class Dashboard extends StatelessWidget {
                         child: InkWell(
                           child: Column(
                             children: [
-                              CircleAvatar(
+                              const CircleAvatar(
                                 backgroundColor: Color(0xffC9E4D0),
                                 radius: 40,
-                                child: Icon(Icons.recycling_outlined,
-                                    color: Color(0xff1B3823)),
+                                child: Icon(
+                                  CustomIcons.card_giftcard,
+                                  size: 35.0,
+                                  color: Color(0xff1B3823),
+                                ),
                               ),
                               SizedBox(height: 15.0),
                               Text('Renew points',

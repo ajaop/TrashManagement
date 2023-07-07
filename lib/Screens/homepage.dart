@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:trash_management/CustomExtras/custom_icons_icons.dart';
 import '../AppServices/auth_service.dart';
 import '../AppServices/database_service.dart';
 import 'dashboard.dart';
@@ -75,12 +76,12 @@ class _HomePageState extends State<HomePage> {
                   label: '',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart_outlined),
-                  label: '',
+                  icon: Icon(CustomIcons.wallet),
+                  label: 'Wallet',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person_outline),
-                  label: '',
+                  label: 'Profile',
                 ),
               ],
               currentIndex: _index,

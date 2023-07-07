@@ -46,6 +46,8 @@ dev_dependencies:
   flutter_svg: ^0.22.0
   dropdown_textfield: 0.0.9
   provider: ^6.0.5
+  google_maps_flutter: 2.2.0
+  geolocator: 7.6.0
   
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -73,6 +75,7 @@ flutter:
     - images/man2.png
     - images/woman1.png
     - images/woman2.png
+    - images/location_marker.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
