@@ -27,6 +27,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double screenHeight = size.height;
+    double screenWidth = size.width;
+
     Widget widget = Container();
     switch (_index) {
       case 0:
@@ -57,11 +61,11 @@ class _HomePageState extends State<HomePage> {
       home: Scaffold(
           body: widget,
           bottomNavigationBar: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(50),
-              bottomLeft: Radius.circular(50),
-              bottomRight: Radius.circular(50),
-              topLeft: Radius.circular(50),
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(screenWidth * 8.56),
+              bottomLeft: Radius.circular(screenWidth * 8.56),
+              bottomRight: Radius.circular(screenWidth * 8.56),
+              topLeft: Radius.circular(screenWidth * 8.56),
             ),
             child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,

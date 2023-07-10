@@ -27,6 +27,9 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     UserDetails userDetails = Provider.of<UserDetails>(context);
     //UserDetails userDetails = UserDetails.dashboard();
+    Size size = MediaQuery.of(context).size;
+    double screenHeight = size.height;
+    double screenWidth = size.width;
 
     return MaterialApp(
       theme: ThemeData(
@@ -273,8 +276,7 @@ class Dashboard extends StatelessWidget {
                       ShimmerLoading(
                         isLoading: true,
                         child: Container(
-                          width: 170.0,
-                          height: 170.0,
+                          width: screenWidth * 0.4,
                           decoration: BoxDecoration(
                             color: Color(0xffEEF7F0),
                             borderRadius: BorderRadius.circular(30),
@@ -283,7 +285,7 @@ class Dashboard extends StatelessWidget {
                       )
                     else
                       Container(
-                        width: 170.0,
+                        width: screenWidth * 0.4,
                         padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
@@ -293,23 +295,24 @@ class Dashboard extends StatelessWidget {
                         child: InkWell(
                           child: Column(
                             children: [
-                              const CircleAvatar(
+                              CircleAvatar(
                                 backgroundColor: Color(0xffC9E4D0),
-                                radius: 40,
+                                radius: (screenWidth * 0.086),
                                 child: Icon(
                                   CustomIcons.recycle,
-                                  size: 35.0,
+                                  size: (screenWidth * 0.083),
                                   color: Color(0xff1B3823),
                                 ),
                               ),
                               SizedBox(height: 15.0),
                               Text('Recycle Waste',
+                                  textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyText1!
                                       .copyWith(
                                           color: Color(0xff1B3823),
-                                          fontSize: 18.0,
+                                          fontSize: screenWidth * 0.042,
                                           fontWeight: FontWeight.normal))
                             ],
                           ),
@@ -319,8 +322,7 @@ class Dashboard extends StatelessWidget {
                       ShimmerLoading(
                         isLoading: true,
                         child: Container(
-                          width: 170.0,
-                          height: 170.0,
+                          width: screenWidth * 0.4,
                           decoration: BoxDecoration(
                             color: Color(0xffEEF7F0),
                             borderRadius: BorderRadius.circular(30),
@@ -329,7 +331,7 @@ class Dashboard extends StatelessWidget {
                       )
                     else
                       Container(
-                        width: 170.0,
+                        width: screenWidth * 0.4,
                         padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
@@ -339,23 +341,24 @@ class Dashboard extends StatelessWidget {
                         child: InkWell(
                           child: Column(
                             children: [
-                              const CircleAvatar(
+                              CircleAvatar(
                                 backgroundColor: Color(0xffC9E4D0),
-                                radius: 40,
+                                radius: (screenWidth * 0.086),
                                 child: Icon(
                                   CustomIcons.card_giftcard,
-                                  size: 35.0,
+                                  size: (screenWidth * 0.083),
                                   color: Color(0xff1B3823),
                                 ),
                               ),
                               SizedBox(height: 15.0),
                               Text('Renew points',
+                                  textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyText1!
                                       .copyWith(
                                           color: Color(0xff1B3823),
-                                          fontSize: 18.0,
+                                          fontSize: screenWidth * 0.042,
                                           fontWeight: FontWeight.normal))
                             ],
                           ),

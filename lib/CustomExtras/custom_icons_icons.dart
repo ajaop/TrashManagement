@@ -12,6 +12,6 @@ class CustomIcons {
       IconData(0xf1b8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData wallet =
       IconData(0xf555, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData location_outline =
-      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData location_arrow =
+      IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
