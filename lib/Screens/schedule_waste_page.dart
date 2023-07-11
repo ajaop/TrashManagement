@@ -10,6 +10,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:trash_management/Models/search_location.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_webservice/places.dart';
+import 'package:google_api_headers/google_api_headers.dart';
 
 import '../CustomExtras/custom_icons_icons.dart';
 
@@ -19,6 +23,11 @@ class ScheduleWastePickup extends StatefulWidget {
   @override
   State<ScheduleWastePickup> createState() => _ScheduleWastePickupState();
 }
+
+const kGoogleApiKey = "AIzaSyBT7MkcYyKTDpYkvjPcT89-wfueYXDS-Qk";
+
+GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+final List<Marker> _markers = <Marker>[];
 
 class _ScheduleWastePickupState extends State<ScheduleWastePickup>
     with SingleTickerProviderStateMixin {
@@ -33,14 +42,6 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
-
-  static const CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
-
-  final List<Marker> _markers = <Marker>[];
 
   @override
   void initState() {
@@ -58,10 +59,15 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
   @override
   Widget build(BuildContext context) {
     bool searchLocation = Provider.of<SearchLocation>(context).search;
+    double searchBoxPosition;
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
 
-    print(screenHeight);
+    if (screenHeight < 700) {
+      searchBoxPosition = (screenHeight * 0.59) / 2.4;
+    } else {
+      searchBoxPosition = (screenHeight * 0.59) / 2.2;
+    }
 
     return MaterialApp(
       theme: ThemeData(
@@ -87,120 +93,146 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
                 },
               ),
             ),
-            Visibility(
-              visible: !searchLocation,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50)),
-                  child: Container(
-                    width: double.infinity,
-                    height: screenHeight * 0.41,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(50),
-                          topRight: Radius.circular(50)),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        children: [
-                          Text('Pick-Up Location',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6!
-                                  .copyWith(
-                                      fontSize: 19.0,
-                                      color: Color(0xff1B3823),
-                                      fontWeight: FontWeight.w900)),
-                          SizedBox(
-                            height: (screenHeight * 0.41) * 0.28,
-                          ),
-                          Container(
-                            height: 55,
-                            decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    CustomIcons.location_arrow,
-                                    size: 16.0,
-                                  ),
-                                  SizedBox(
-                                    width: 70.0,
-                                  ),
-                                  Text('Use Current Location',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6!
-                                          .copyWith(
-                                              fontSize: 17.0,
-                                              color: Color(0xff1B3823),
-                                              fontWeight: FontWeight.bold))
-                                ],
+            InkWell(
+              onTap: () {
+                Provider.of<SearchLocation>(context, listen: false)
+                    .updateState();
+                _handlePressSearch();
+              },
+              child: Visibility(
+                visible: !searchLocation,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Material(
+                    elevation: 10,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(50),
+                        topRight: Radius.circular(50)),
+                    child: Container(
+                      width: double.infinity,
+                      height: screenHeight * 0.41,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(50),
+                            topRight: Radius.circular(50)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          children: [
+                            Text('Pick-Up Location',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6!
+                                    .copyWith(
+                                        fontSize: 19.0,
+                                        color: Color(0xff1B3823),
+                                        fontWeight: FontWeight.w900)),
+                            SizedBox(
+                              height: 30.0,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(15.0, 0, 15.0, 5),
+                              child: Container(
+                                height: 56,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: Color(0xffEEF7F0),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Center(
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 15.0, right: 5.0),
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.search_outlined),
+                                          SizedBox(
+                                            width: 30,
+                                          ),
+                                          Text(
+                                            'Search Location',
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        ],
+                                      )),
+                                ),
                               ),
                             ),
-                          )
-                        ],
+                            Expanded(
+                              child: ListView(
+                                shrinkWrap: true,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        15.0, 18.0, 15.0, 7),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          CustomIcons.location_arrow,
+                                          size: 16.0,
+                                        ),
+                                        SizedBox(
+                                          width: 40.0,
+                                        ),
+                                        Text('Use Current Location',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6!
+                                                .copyWith(
+                                                    fontSize: 17.0,
+                                                    color: Color(0xff1B3823),
+                                                    fontWeight:
+                                                        FontWeight.normal))
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: Colors.grey[300],
+                                    indent: 10.0,
+                                    endIndent: 10.0,
+                                    thickness: 1.5,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        15.0, 18.0, 15.0, 7),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          CustomIcons.location_arrow,
+                                          size: 16.0,
+                                        ),
+                                        SizedBox(
+                                          width: 40.0,
+                                        ),
+                                        Text('Use Current Location',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6!
+                                                .copyWith(
+                                                    fontSize: 17.0,
+                                                    color: Color(0xff1B3823),
+                                                    fontWeight:
+                                                        FontWeight.normal))
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: Colors.grey[300],
+                                    indent: 10.0,
+                                    endIndent: 10.0,
+                                    thickness: 1.5,
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            AnimatedPositioned(
-              bottom: searchLocation ? 0.47 * screenHeight : 0.64 * 379.66,
-              width: searchLocation
-                  ? MediaQuery.of(context).size.width
-                  : MediaQuery.of(context).size.width / 1.15,
-              duration: duration,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(15.0, 0, 15.0, 5),
-                child: Container(
-                  height: 58,
-                  decoration: BoxDecoration(
-                      color: searchLocation ? Colors.white : Color(0xffC9E4D0),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15.0, right: 5.0),
-                      child: TextFormField(
-                          cursorColor: Color(0xff1B3823),
-                          inputFormatters: [],
-                          onChanged: (value) => null,
-                          onTap: () async {
-                            Provider.of<SearchLocation>(context, listen: false)
-                                .updateState();
-
-                            _animController.forward();
-                          },
-                          onFieldSubmitted: (value) {
-                            Provider.of<SearchLocation>(context, listen: false)
-                                .updateState();
-
-                            _animController.reverse();
-                          },
-                          decoration: const InputDecoration(
-                            hintText: 'Search Location',
-                            border: InputBorder.none,
-                            prefixIcon: Padding(
-                              padding: EdgeInsets.only(right: 30),
-                              child: Icon(Icons.search_outlined),
-                            ),
-                            enabled: true,
-                            hintStyle: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          )),
                     ),
                   ),
                 ),
@@ -244,5 +276,68 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
     setState(() {});
+  }
+
+  Future<void> _handlePressSearch() async {
+    Prediction? p = await PlacesAutocomplete.show(
+        context: context,
+        apiKey: kGoogleApiKey,
+        onError: onError,
+        mode: Mode.overlay,
+        language: 'en',
+        strictbounds: false,
+        overlayBorderRadius: BorderRadius.all(Radius.circular(20)),
+        types: [""],
+        decoration: InputDecoration(
+            hintText: 'Search Location',
+            hintStyle: TextStyle(
+                color: Colors.grey, fontSize: 18, fontWeight: FontWeight.bold),
+            border: InputBorder.none),
+        components: [
+          Component(Component.country, "ng"),
+          Component(Component.country, "usa")
+        ]);
+    if (p == null) {
+      Provider.of<SearchLocation>(context, listen: false).updateState();
+    } else {
+      displayPrediction(p);
+      Provider.of<SearchLocation>(context, listen: false).updateState();
+    }
+  }
+
+  void onError(PlacesAutocompleteResponse response) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.red[600],
+      content: Text(
+        response.errorMessage!,
+        textAlign: TextAlign.center,
+      ),
+    ));
+  }
+
+  Future<void> displayPrediction(Prediction p) async {
+    GoogleMapsPlaces places = GoogleMapsPlaces(
+        apiKey: kGoogleApiKey,
+        apiHeaders: await const GoogleApiHeaders().getHeaders());
+
+    PlacesDetailsResponse detail = await places.getDetailsByPlaceId(p.placeId!);
+
+    final lat = detail.result.geometry!.location.lat;
+    final lng = detail.result.geometry!.location.lng;
+
+    _markers.clear();
+    _markers.add(Marker(
+        markerId: const MarkerId("2"),
+        icon: await BitmapDescriptor.fromAssetImage(
+            ImageConfiguration(), 'images/location_marker.png'),
+        position: LatLng(lat, lng),
+        infoWindow: InfoWindow(title: detail.result.name)));
+    final GoogleMapController controller = await _controller.future;
+    setState(() {
+      controller
+          .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
+    });
   }
 }
