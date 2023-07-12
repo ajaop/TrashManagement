@@ -42,7 +42,6 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
 
   @override
   void initState() {
@@ -338,6 +337,7 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
 
     final lat = detail.result.geometry!.location.lat;
     final lng = detail.result.geometry!.location.lng;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     _markers.add(Marker(
         markerId: const MarkerId("2"),
@@ -347,7 +347,8 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
         infoWindow: InfoWindow(title: detail.result.name)));
     final GoogleMapController controller = await _controller.future;
 
-     final String? recentLocationString = await prefs.getString('recent-locations');
+    final String? recentLocationString =
+        await prefs.getString('recent-locations');
 
     setState(() {
       controller.animateCamera(CameraUpdate.newLatLngZoom(
