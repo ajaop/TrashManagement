@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,11 +10,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:trash_management/Models/search_location.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../CustomExtras/custom_icons_icons.dart';
 
 class ScheduleWastePickup extends StatefulWidget {
@@ -42,6 +42,7 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
 
   @override
   void initState() {
@@ -93,47 +94,48 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
                 },
               ),
             ),
-            InkWell(
-              onTap: () {
-                Provider.of<SearchLocation>(context, listen: false)
-                    .updateState();
-                _handlePressSearch();
-              },
-              child: Visibility(
-                visible: !searchLocation,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(50),
-                        topRight: Radius.circular(50)),
-                    child: Container(
-                      width: double.infinity,
-                      height: screenHeight * 0.41,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(50),
-                            topRight: Radius.circular(50)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                          children: [
-                            Text('Pick-Up Location',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .copyWith(
-                                        fontSize: 19.0,
-                                        color: Color(0xff1B3823),
-                                        fontWeight: FontWeight.w900)),
-                            SizedBox(
-                              height: 30.0,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(15.0, 0, 15.0, 5),
+            Visibility(
+              visible: !searchLocation,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Material(
+                  elevation: 10,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(50),
+                      topRight: Radius.circular(50)),
+                  child: Container(
+                    width: double.infinity,
+                    height: screenHeight * 0.41,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(50),
+                          topRight: Radius.circular(50)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        children: [
+                          Text('Pick-Up Location',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6!
+                                  .copyWith(
+                                      fontSize: 19.0,
+                                      color: Color(0xff1B3823),
+                                      fontWeight: FontWeight.w900)),
+                          SizedBox(
+                            height: 30.0,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
+                            child: InkWell(
+                              onTap: () {
+                                Provider.of<SearchLocation>(context,
+                                        listen: false)
+                                    .updateState();
+                                _handlePressSearch();
+                              },
                               child: Container(
                                 height: 56,
                                 width: double.infinity,
@@ -163,75 +165,75 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
                                 ),
                               ),
                             ),
-                            Expanded(
-                              child: ListView(
-                                shrinkWrap: true,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        15.0, 18.0, 15.0, 7),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          CustomIcons.location_arrow,
-                                          size: 16.0,
-                                        ),
-                                        SizedBox(
-                                          width: 40.0,
-                                        ),
-                                        Text('Use Current Location',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6!
-                                                .copyWith(
-                                                    fontSize: 17.0,
-                                                    color: Color(0xff1B3823),
-                                                    fontWeight:
-                                                        FontWeight.normal))
-                                      ],
-                                    ),
+                          ),
+                          Expanded(
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      15.0, 18.0, 15.0, 7),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        CustomIcons.location_arrow,
+                                        size: 16.0,
+                                      ),
+                                      SizedBox(
+                                        width: 40.0,
+                                      ),
+                                      Text('Use Current Location',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6!
+                                              .copyWith(
+                                                  fontSize: 17.0,
+                                                  color: Color(0xff1B3823),
+                                                  fontWeight:
+                                                      FontWeight.normal))
+                                    ],
                                   ),
-                                  Divider(
-                                    color: Colors.grey[300],
-                                    indent: 10.0,
-                                    endIndent: 10.0,
-                                    thickness: 1.5,
+                                ),
+                                Divider(
+                                  color: Colors.grey[300],
+                                  indent: 10.0,
+                                  endIndent: 10.0,
+                                  thickness: 1.5,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      15.0, 18.0, 15.0, 7),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        CustomIcons.location_arrow,
+                                        size: 16.0,
+                                      ),
+                                      SizedBox(
+                                        width: 40.0,
+                                      ),
+                                      Text('Use Current Location',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6!
+                                              .copyWith(
+                                                  fontSize: 17.0,
+                                                  color: Color(0xff1B3823),
+                                                  fontWeight:
+                                                      FontWeight.normal))
+                                    ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        15.0, 18.0, 15.0, 7),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          CustomIcons.location_arrow,
-                                          size: 16.0,
-                                        ),
-                                        SizedBox(
-                                          width: 40.0,
-                                        ),
-                                        Text('Use Current Location',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6!
-                                                .copyWith(
-                                                    fontSize: 17.0,
-                                                    color: Color(0xff1B3823),
-                                                    fontWeight:
-                                                        FontWeight.normal))
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: Colors.grey[300],
-                                    indent: 10.0,
-                                    endIndent: 10.0,
-                                    thickness: 1.5,
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                                ),
+                                Divider(
+                                  color: Colors.grey[300],
+                                  indent: 10.0,
+                                  endIndent: 10.0,
+                                  thickness: 1.5,
+                                )
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -285,14 +287,24 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
         onError: onError,
         mode: Mode.overlay,
         language: 'en',
+        logo: Text(''),
         strictbounds: false,
         overlayBorderRadius: BorderRadius.all(Radius.circular(20)),
         types: [""],
-        decoration: InputDecoration(
-            hintText: 'Search Location',
+        resultTextStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            color: Color(0xff1B3823),
+            fontSize: 17.0,
+            fontWeight: FontWeight.w300),
+        hint: 'Search Location',
+        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+            color: Color(0xff1B3823),
+            fontSize: 17.0,
+            fontWeight: FontWeight.bold),
+        textDecoration: const InputDecoration(
             hintStyle: TextStyle(
                 color: Colors.grey, fontSize: 18, fontWeight: FontWeight.bold),
-            border: InputBorder.none),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30)))),
         components: [
           Component(Component.country, "ng"),
           Component(Component.country, "usa")
@@ -327,7 +339,6 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
     final lat = detail.result.geometry!.location.lat;
     final lng = detail.result.geometry!.location.lng;
 
-    _markers.clear();
     _markers.add(Marker(
         markerId: const MarkerId("2"),
         icon: await BitmapDescriptor.fromAssetImage(
@@ -335,9 +346,47 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
         position: LatLng(lat, lng),
         infoWindow: InfoWindow(title: detail.result.name)));
     final GoogleMapController controller = await _controller.future;
+
+     final String? recentLocationString = await prefs.getString('recent-locations');
+
     setState(() {
-      controller
-          .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
+      controller.animateCamera(CameraUpdate.newLatLngZoom(
+        LatLng(lat, lng),
+        18,
+      ));
     });
   }
+}
+
+class RecentLocation {
+  final double lat, lng;
+  final String description;
+
+  RecentLocation(
+      {required this.lat, required this.lng, required this.description});
+
+  factory RecentLocation.fromJson(Map<String, dynamic> jsonData) {
+    return RecentLocation(
+        lat: jsonData['lat'],
+        lng: jsonData['lng'],
+        description: jsonData['description']);
+  }
+
+  static Map<String, dynamic> toMap(RecentLocation recentLocation) => {
+        'lat': recentLocation.lat,
+        'lng': recentLocation.lng,
+        'description': recentLocation.description
+      };
+
+  static String encode(List<RecentLocation> recentLocations) => json.encode(
+        recentLocations
+            .map<Map<String, dynamic>>(
+                (recentLocations) => RecentLocation.toMap(recentLocations))
+            .toList(),
+      );
+
+  static List<RecentLocation> decode(String recentLocations) =>
+      (json.decode(recentLocations) as List<dynamic>)
+          .map<RecentLocation>((item) => RecentLocation.fromJson(item))
+          .toList();
 }
