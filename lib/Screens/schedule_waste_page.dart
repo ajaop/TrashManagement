@@ -28,6 +28,7 @@ const kGoogleApiKey = "AIzaSyBT7MkcYyKTDpYkvjPcT89-wfueYXDS-Qk";
 
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 final List<Marker> _markers = <Marker>[];
+List<RecentLocation>? recentLocationsList = <RecentLocation>[];
 
 class _ScheduleWastePickupState extends State<ScheduleWastePickup>
     with SingleTickerProviderStateMixin {
@@ -165,71 +166,93 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: ListView(
-                              shrinkWrap: true,
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(15.0, 18.0, 15.0, 0),
+                            child: Row(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      15.0, 18.0, 15.0, 7),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        CustomIcons.location_arrow,
-                                        size: 16.0,
-                                      ),
-                                      SizedBox(
-                                        width: 40.0,
-                                      ),
-                                      Text('Use Current Location',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6!
-                                              .copyWith(
-                                                  fontSize: 17.0,
-                                                  color: Color(0xff1B3823),
-                                                  fontWeight:
-                                                      FontWeight.normal))
-                                    ],
-                                  ),
+                                Icon(
+                                  CustomIcons.location_arrow,
+                                  size: 16.0,
                                 ),
-                                Divider(
-                                  color: Colors.grey[300],
-                                  indent: 10.0,
-                                  endIndent: 10.0,
-                                  thickness: 1.5,
+                                SizedBox(
+                                  width: 40.0,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      15.0, 18.0, 15.0, 7),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        CustomIcons.location_arrow,
-                                        size: 16.0,
-                                      ),
-                                      SizedBox(
-                                        width: 40.0,
-                                      ),
-                                      Text('Use Current Location',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6!
-                                              .copyWith(
-                                                  fontSize: 17.0,
-                                                  color: Color(0xff1B3823),
-                                                  fontWeight:
-                                                      FontWeight.normal))
-                                    ],
-                                  ),
-                                ),
-                                Divider(
-                                  color: Colors.grey[300],
-                                  indent: 10.0,
-                                  endIndent: 10.0,
-                                  thickness: 1.5,
-                                )
+                                Text('Use Current Location',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6!
+                                        .copyWith(
+                                            fontSize: 17.0,
+                                            color: Color(0xff1B3823),
+                                            fontWeight: FontWeight.normal))
                               ],
+                            ),
+                          ),
+                          Divider(
+                            color: Colors.grey[300],
+                            indent: 10.0,
+                            endIndent: 10.0,
+                            thickness: 1.5,
+                          ),
+                          Expanded(
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              itemCount: recentLocationsList?.length ?? 0,
+                              itemBuilder: (context, position) {
+                                return InkWell(
+                                  onTap: () {
+                                    setCamera(
+                                        recentLocationsList![position].lat,
+                                        recentLocationsList![position].lng,
+                                        recentLocationsList![position].name);
+                                  },
+                                  child: Column(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15.0, 0, 15.0, 0),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.location_on_outlined,
+                                            size: 22.0,
+                                          ),
+                                          SizedBox(
+                                            width: 40.0,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                                recentLocationsList!.reversed
+                                                    .toList()[position]
+                                                    .description,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6!
+                                                    .copyWith(
+                                                        fontSize: 17.0,
+                                                        color:
+                                                            Color(0xff1B3823),
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Divider(
+                                      color: Colors.grey[300],
+                                      indent: 10.0,
+                                      endIndent: 10.0,
+                                      thickness: 1.5,
+                                    )
+                                  ]),
+                                );
+                              },
+                              separatorBuilder: (context, index) => SizedBox(
+                                height: 15.0,
+                              ),
                             ),
                           )
                         ],
@@ -276,6 +299,8 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
 
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
+    await getRecentLocations();
     setState(() {});
   }
 
@@ -337,18 +362,20 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
 
     final lat = detail.result.geometry!.location.lat;
     final lng = detail.result.geometry!.location.lng;
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    storeRecentLocation(p, lat, lng, detail.result.name);
+
+    setCamera(lat, lng, detail.result.name);
+  }
+
+  Future<void> setCamera(double lat, double lng, String name) async {
     _markers.add(Marker(
         markerId: const MarkerId("2"),
         icon: await BitmapDescriptor.fromAssetImage(
             ImageConfiguration(), 'images/location_marker.png'),
         position: LatLng(lat, lng),
-        infoWindow: InfoWindow(title: detail.result.name)));
+        infoWindow: InfoWindow(title: name)));
     final GoogleMapController controller = await _controller.future;
-
-    final String? recentLocationString =
-        await prefs.getString('recent-locations');
 
     setState(() {
       controller.animateCamera(CameraUpdate.newLatLngZoom(
@@ -357,26 +384,90 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup>
       ));
     });
   }
+
+  Future<void> getRecentLocations() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final String? recentLocationString = prefs.getString('recent-locations');
+
+    if (recentLocationString != null) {
+      recentLocationsList = RecentLocation.decode(recentLocationString);
+    }
+  }
+
+  Future<void> storeRecentLocation(Prediction p, lat, lng, name) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? recentLocationString = prefs.getString('recent-locations');
+    String encodedData = '';
+
+    if (recentLocationString == null) {
+      recentLocationsList?.add(RecentLocation(
+          lat: lat,
+          lng: lng,
+          description: p.description ?? 'No Description',
+          name: name));
+      encodedData = RecentLocation.encode(recentLocationsList!);
+      await prefs.setString('recent-locations', encodedData);
+    } else {
+      if (recentLocationsList!.length >= 3) {
+        recentLocationsList!.removeAt(0);
+        recentLocationsList!.add(RecentLocation(
+            lat: lat,
+            lng: lng,
+            description: p.description ?? 'No Description',
+            name: name));
+
+        encodedData = RecentLocation.encode(recentLocationsList!);
+
+        await prefs.setString('recent-locations', encodedData);
+      } else {
+        for (int i = 0; i < recentLocationsList!.length; i++) {
+          if (recentLocationsList![i].description == p.description) {
+            recentLocationsList!.removeAt(i);
+          }
+        }
+
+        recentLocationsList!.add(
+          RecentLocation(
+              lat: lat,
+              lng: lng,
+              description: p.description ?? 'No Description',
+              name: name ?? 'No Name'),
+        );
+
+        encodedData = RecentLocation.encode(recentLocationsList!);
+      }
+
+      await prefs.setString('recent-locations', encodedData);
+    }
+
+    setState(() {});
+  }
 }
 
 class RecentLocation {
   final double lat, lng;
-  final String description;
+  final String description, name;
 
   RecentLocation(
-      {required this.lat, required this.lng, required this.description});
+      {required this.lat,
+      required this.lng,
+      required this.description,
+      required this.name});
 
   factory RecentLocation.fromJson(Map<String, dynamic> jsonData) {
     return RecentLocation(
         lat: jsonData['lat'],
         lng: jsonData['lng'],
-        description: jsonData['description']);
+        description: jsonData['description'],
+        name: jsonData['name']);
   }
 
   static Map<String, dynamic> toMap(RecentLocation recentLocation) => {
         'lat': recentLocation.lat,
         'lng': recentLocation.lng,
-        'description': recentLocation.description
+        'description': recentLocation.description,
+        'name': recentLocation.name
       };
 
   static String encode(List<RecentLocation> recentLocations) => json.encode(

@@ -83,7 +83,8 @@ class AuthService {
         user = auth.currentUser;
         bool userExist = await doesUserExist(user!.uid, _messangerKey);
         if (userExist == true) {
-          Navigator.pushReplacementNamed(context, '/homepage');
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              '/homepage', (Route<dynamic> route) => false);
         } else {
           Navigator.push(
               context,
