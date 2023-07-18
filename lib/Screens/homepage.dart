@@ -76,10 +76,6 @@ class _HomePageState extends State<HomePage> {
                 BottomNavigationBarItem(
                     icon: Icon(Icons.home_outlined), label: 'Home'),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
                   icon: Icon(CustomIcons.wallet),
                   label: 'Wallet',
                 ),

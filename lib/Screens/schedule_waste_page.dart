@@ -14,6 +14,7 @@ import '../AppServices/schedule_waste_service.dart';
 import '../CustomExtras/custom_icons_icons.dart';
 import '../Models/recent_location.dart';
 import '../Provider/search_location.dart';
+import '../Widgets/select_truck_bottomsheet.dart';
 import '../loader_animation.dart';
 
 class ScheduleWastePickup extends StatefulWidget {
@@ -50,6 +51,9 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
         Provider.of<LocationProvider>(context).markers;
     List<RecentLocation>? recentLocationsList =
         Provider.of<LocationProvider>(context).recentLocationsList;
+    Map<PolylineId, Polyline> _polylines =
+        Provider.of<LocationProvider>(context).polylines;
+
     bool isLoading = Provider.of<LocationProvider>(context).isLoading;
 
     return MaterialApp(
@@ -69,6 +73,7 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
               child: GoogleMap(
                 initialCameraPosition: _kGooglePlex,
                 markers: Set<Marker>.of(_markers),
+                polylines: Set<Polyline>.of(_polylines.values),
                 mapType: MapType.normal,
                 myLocationEnabled: true,
                 compassEnabled: true,
@@ -156,24 +161,45 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                           Padding(
                             padding:
                                 const EdgeInsets.fromLTRB(15.0, 18.0, 15.0, 0),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  CustomIcons.location_arrow,
-                                  size: 16.0,
-                                ),
-                                SizedBox(
-                                  width: 40.0,
-                                ),
-                                Text('Use Current Location',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline6!
-                                        .copyWith(
-                                            fontSize: 17.0,
-                                            color: Color(0xff1B3823),
-                                            fontWeight: FontWeight.normal))
-                              ],
+                            child: InkWell(
+                              onTap: () {
+                                showModalBottomSheet<void>(
+                                    context: context,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(50.0),
+                                      ),
+                                    ),
+                                    elevation: 10,
+                                    builder: (BuildContext context) {
+                                      return select_truck_bottomsheet(
+                                          screenHeight: screenHeight,
+                                          location:
+                                              Provider.of<LocationProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .location);
+                                    });
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    CustomIcons.location_arrow,
+                                    size: 16.0,
+                                  ),
+                                  SizedBox(
+                                    width: 40.0,
+                                  ),
+                                  Text('Use Current Location',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6!
+                                          .copyWith(
+                                              fontSize: 17.0,
+                                              color: Color(0xff1B3823),
+                                              fontWeight: FontWeight.normal))
+                                ],
+                              ),
                             ),
                           ),
                           Divider(
@@ -189,11 +215,33 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                               itemBuilder: (context, position) {
                                 return InkWell(
                                   onTap: () {
-                                    scheduleWasteService.setCamera(
-                                        recentLocationsList![position].lat,
-                                        recentLocationsList[position].lng,
-                                        recentLocationsList[position].name,
-                                        '2');
+                                    scheduleWasteService.getDistance(
+                                        recentLocationsList!.reversed
+                                            .toList()[position]
+                                            .lat,
+                                        recentLocationsList.reversed
+                                            .toList()[position]
+                                            .lng,
+                                        recentLocationsList.reversed
+                                            .toList()[position]
+                                            .name);
+
+                                    // showModalBottomSheet<void>(
+                                    //     context: context,
+                                    //     shape: const RoundedRectangleBorder(
+                                    //       borderRadius: BorderRadius.vertical(
+                                    //         top: Radius.circular(50.0),
+                                    //       ),
+                                    //     ),
+                                    //     elevation: 10,
+                                    //     builder: (BuildContext context) {
+                                    //       return select_truck_bottomsheet(
+                                    //           screenHeight: screenHeight,
+                                    //           location: recentLocationsList
+                                    //               .reversed
+                                    //               .toList()[position]
+                                    //               .name);
+                                    //     });
                                   },
                                   child: Column(children: [
                                     Padding(
