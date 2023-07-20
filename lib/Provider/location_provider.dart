@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,6 +10,7 @@ class LocationProvider extends ChangeNotifier {
   GoogleMapController? controller;
   bool isLoading = false;
   String location = '';
+  double currentLat = 0, currentLng = 0;
   Map<PolylineId, Polyline> polylines = {};
 
   void updateLoading() {
@@ -18,9 +18,21 @@ class LocationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateLocation(String name, double lat, double lng) {
+    currentLat = lat;
+    currentLng = lng;
+
+    location = name;
+    notifyListeners();
+  }
+
   void updateMarkers(Marker markerItem) {
     markers.add(markerItem);
     notifyListeners();
+  }
+
+  void clearMarkers() {
+    markers.clear();
   }
 
   void initializeLocations(List<RecentLocation>? previousLocations) {
@@ -53,7 +65,7 @@ class LocationProvider extends ChangeNotifier {
         northeast: LatLng(northEastLat, northEastLng),
         southwest: LatLng(southWestLat, southWestLng),
       ),
-      85.0,
+      50.0,
     ));
     notifyListeners();
   }
@@ -63,12 +75,8 @@ class LocationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateLocation(String name) {
-    location = name;
-    notifyListeners();
-  }
-
   void updatePolyLine(Polyline polyline, PolylineId id) {
     polylines[id] = polyline;
+    notifyListeners();
   }
 }
