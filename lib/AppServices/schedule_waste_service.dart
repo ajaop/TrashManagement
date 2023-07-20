@@ -121,7 +121,7 @@ class ScheduleWasteService {
     if (state.contains('oyo') || state.contains('lagos')) {
       storeRecentLocation(p, lat, lng, detail.result.formattedAddress);
       getDistance(lat, lng, detail.result.name);
-      // selectTruckType(detail.result.formattedAddress ?? 'No State');
+      selectTruckType(detail.result.formattedAddress ?? 'No State');
     } else {
       error('Outside Jurisdiction', _messangerKey);
     }
@@ -279,6 +279,23 @@ class ScheduleWasteService {
 
     Provider.of<LocationProvider>(context, listen: false)
         .updatePolyLine(polyline, id);
+  }
+
+  Future<void> selectTruckType(String locationName) {
+    Size size = MediaQuery.of(context).size;
+    screenHeight = size.height;
+    return showModalBottomSheet<void>(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(50.0),
+          ),
+        ),
+        elevation: 10,
+        builder: (BuildContext context) {
+          return select_truck_bottomsheet(
+              screenHeight: screenHeight, location: locationName);
+        });
   }
 
   void error(errorMessage, _messangerKey) {

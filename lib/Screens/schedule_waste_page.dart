@@ -170,10 +170,10 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                               onTap: () {
                                 scheduleWasteService.getDistance(
                                     currentLat, currentLng, currentLocation);
-                                selectTruckType(Provider.of<LocationProvider>(
-                                        context,
-                                        listen: false)
-                                    .location);
+                                scheduleWasteService.selectTruckType(
+                                    Provider.of<LocationProvider>(context,
+                                            listen: false)
+                                        .location);
                               },
                               child: Row(
                                 children: [
@@ -220,9 +220,10 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                                             .toList()[position]
                                             .name);
 
-                                    selectTruckType(recentLocationsList.reversed
-                                        .toList()[position]
-                                        .name);
+                                    scheduleWasteService.selectTruckType(
+                                        recentLocationsList.reversed
+                                            .toList()[position]
+                                            .name);
                                   },
                                   child: Column(children: [
                                     Padding(
@@ -281,20 +282,5 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
         ),
       ),
     );
-  }
-
-  Future<void> selectTruckType(String locationName) {
-    return showModalBottomSheet<void>(
-        context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(50.0),
-          ),
-        ),
-        elevation: 10,
-        builder: (BuildContext context) {
-          return select_truck_bottomsheet(
-              screenHeight: screenHeight, location: locationName);
-        });
   }
 }
