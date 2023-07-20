@@ -26,6 +26,7 @@ class ScheduleWastePickup extends StatefulWidget {
 
 class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
   late ScheduleWasteService scheduleWasteService;
+  final _messangerKey = GlobalKey<ScaffoldMessengerState>();
   double screenHeight = 0;
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -36,7 +37,7 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      scheduleWasteService = ScheduleWasteService(context);
+      scheduleWasteService = ScheduleWasteService(context, _messangerKey);
       scheduleWasteService.getUserCurrentLocation();
     });
   }
@@ -55,8 +56,12 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
         Provider.of<LocationProvider>(context).polylines;
 
     bool isLoading = Provider.of<LocationProvider>(context).isLoading;
+    String currentLocation = Provider.of<LocationProvider>(context).location;
+    double currentLat = Provider.of<LocationProvider>(context).currentLat;
+    double currentLng = Provider.of<LocationProvider>(context).currentLng;
 
     return MaterialApp(
+      scaffoldMessengerKey: _messangerKey,
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: Color(0xff1B3823),
@@ -163,23 +168,12 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                                 const EdgeInsets.fromLTRB(15.0, 18.0, 15.0, 0),
                             child: InkWell(
                               onTap: () {
-                                showModalBottomSheet<void>(
-                                    context: context,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(50.0),
-                                      ),
-                                    ),
-                                    elevation: 10,
-                                    builder: (BuildContext context) {
-                                      return select_truck_bottomsheet(
-                                          screenHeight: screenHeight,
-                                          location:
-                                              Provider.of<LocationProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .location);
-                                    });
+                                scheduleWasteService.getDistance(
+                                    currentLat, currentLng, currentLocation);
+                                selectTruckType(Provider.of<LocationProvider>(
+                                        context,
+                                        listen: false)
+                                    .location);
                               },
                               child: Row(
                                 children: [
@@ -226,22 +220,9 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                                             .toList()[position]
                                             .name);
 
-                                    // showModalBottomSheet<void>(
-                                    //     context: context,
-                                    //     shape: const RoundedRectangleBorder(
-                                    //       borderRadius: BorderRadius.vertical(
-                                    //         top: Radius.circular(50.0),
-                                    //       ),
-                                    //     ),
-                                    //     elevation: 10,
-                                    //     builder: (BuildContext context) {
-                                    //       return select_truck_bottomsheet(
-                                    //           screenHeight: screenHeight,
-                                    //           location: recentLocationsList
-                                    //               .reversed
-                                    //               .toList()[position]
-                                    //               .name);
-                                    //     });
+                                    selectTruckType(recentLocationsList.reversed
+                                        .toList()[position]
+                                        .name);
                                   },
                                   child: Column(children: [
                                     Padding(
@@ -300,5 +281,20 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
         ),
       ),
     );
+  }
+
+  Future<void> selectTruckType(String locationName) {
+    return showModalBottomSheet<void>(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(50.0),
+          ),
+        ),
+        elevation: 10,
+        builder: (BuildContext context) {
+          return select_truck_bottomsheet(
+              screenHeight: screenHeight, location: locationName);
+        });
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:trash_management/Screens/schedule_waste_page.dart';
 import '../Models/recent_location.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,18 +14,20 @@ import '../Provider/search_location.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_polyline_points/src/utils/request_enums.dart' as travel;
-
+import '../Widgets/select_truck_bottomsheet.dart';
 import '../secrets.dart';
 
 const kGoogleApiKey = Secrets.API_KEY;
 
 class ScheduleWasteService {
   final BuildContext context;
+  final _messangerKey;
   double screenHeight = 0;
   late PolylinePoints polylinePoints;
+  ScheduleWastePickup sc = new ScheduleWastePickup();
   List<LatLng> polylineCoordinates = [];
 
-  ScheduleWasteService(this.context);
+  ScheduleWasteService(this.context, this._messangerKey);
 
   Future<void> getUserCurrentLocation() async {
     Provider.of<LocationProvider>(context, listen: false).updateLoading();
@@ -41,8 +44,10 @@ class ScheduleWasteService {
         currentLocation.latitude, currentLocation.longitude);
     var address = placemarks.first.name;
 
-    Provider.of<LocationProvider>(context, listen: false)
-        .updateLocation(address ?? 'No Location');
+    Provider.of<LocationProvider>(context, listen: false).updateLocation(
+        address ?? 'No Location',
+        currentLocation.latitude,
+        currentLocation.longitude);
 
     setCamera(currentLocation.latitude, currentLocation.longitude, address!);
 
@@ -110,9 +115,16 @@ class ScheduleWasteService {
     final lat = detail.result.geometry!.location.lat;
     final lng = detail.result.geometry!.location.lng;
 
-    storeRecentLocation(p, lat, lng, detail.result.formattedAddress);
-
-    setCamera(lat, lng, detail.result.name);
+    List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
+    var state =
+        placemarks.first.administrativeArea?.toLowerCase() ?? 'No State';
+    if (state.contains('oyo') || state.contains('lagos')) {
+      storeRecentLocation(p, lat, lng, detail.result.formattedAddress);
+      getDistance(lat, lng, detail.result.name);
+      // selectTruckType(detail.result.formattedAddress ?? 'No State');
+    } else {
+      error('Outside Jurisdiction', _messangerKey);
+    }
   }
 
   Future<void> setCamera(double lat, double lng, String name) async {
@@ -125,8 +137,6 @@ class ScheduleWasteService {
 
     Provider.of<LocationProvider>(context, listen: false)
         .controllerAnimateCamera(lat, lng);
-
-    //getDistance(lat, lng);
   }
 
   Future<void> getRecentLocations() async {
@@ -197,6 +207,8 @@ class ScheduleWasteService {
     var destinationLat = 7.395412900000002;
     var destinationLng = 3.918210800000001;
 
+    Provider.of<LocationProvider>(context, listen: false).clearMarkers();
+
     Provider.of<LocationProvider>(context, listen: false).updateMarkers(Marker(
         markerId: MarkerId('1'),
         icon: await BitmapDescriptor.fromAssetImage(
@@ -238,13 +250,14 @@ class ScheduleWasteService {
     polylinePoints = PolylinePoints();
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      Secrets.API_KEY,
+      Secrets.API_KEY2,
       PointLatLng(startLatitude, startLongitude),
       PointLatLng(destinationLatitude, destinationLongitude),
       travelMode: travel.TravelMode.driving,
     );
     print(result.errorMessage);
     // Adding the coordinates to the list
+    polylineCoordinates.clear();
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
@@ -252,12 +265,12 @@ class ScheduleWasteService {
     }
 
     // Defining an ID
-    PolylineId id = PolylineId('poly');
+    PolylineId id = const PolylineId('poly');
 
     // Initializing Polyline
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.red,
+      color: Color(0xff1B3823),
       points: polylineCoordinates,
       width: 3,
     );
@@ -266,5 +279,21 @@ class ScheduleWasteService {
 
     Provider.of<LocationProvider>(context, listen: false)
         .updatePolyLine(polyline, id);
+  }
+
+  void error(errorMessage, _messangerKey) {
+    _messangerKey.currentState!.showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.red[600],
+        duration: const Duration(seconds: 5),
+        elevation: 0,
+        content: Text(
+          errorMessage,
+          textAlign: TextAlign.center,
+        )));
+
+    Timer(Duration(seconds: 3), () {
+      _messangerKey.currentState!.hideCurrentSnackBar();
+    });
   }
 }
