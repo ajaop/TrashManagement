@@ -5,6 +5,7 @@ import 'package:trash_management/CustomExtras/custom_icons_icons.dart';
 import '../AppServices/auth_service.dart';
 import '../AppServices/database_service.dart';
 import 'dashboard.dart';
+import 'package:solar_icons/solar_icons.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -74,13 +75,13 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Color(0xffA2D1AE),
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.home_outlined), label: 'Home'),
+                    icon: Icon(SolarIconsOutline.home), label: 'Home'),
                 BottomNavigationBarItem(
-                  icon: Icon(CustomIcons.wallet),
+                  icon: Icon(SolarIconsOutline.wallet),
                   label: 'Wallet',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.person_outline),
+                  icon: Icon(SolarIconsOutline.user),
                   label: 'Profile',
                 ),
               ],

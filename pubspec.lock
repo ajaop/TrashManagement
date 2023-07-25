@@ -651,6 +651,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  solar_icons:
+    dependency: "direct dev"
+    description:
+      name: solar_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   source_span:
     dependency: transitive
     description:

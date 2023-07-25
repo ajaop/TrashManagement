@@ -119,9 +119,9 @@ class ScheduleWasteService {
     var state =
         placemarks.first.administrativeArea?.toLowerCase() ?? 'No State';
     if (state.contains('oyo') || state.contains('lagos')) {
-      storeRecentLocation(p, lat, lng, detail.result.formattedAddress);
+      storeRecentLocation(p, lat, lng, detail.result.name);
       getDistance(lat, lng, detail.result.name);
-      selectTruckType(detail.result.formattedAddress ?? 'No State');
+      selectTruckType(detail.result.name);
     } else {
       error('Outside Jurisdiction', _messangerKey);
     }
@@ -140,6 +140,9 @@ class ScheduleWasteService {
   }
 
   Future<void> getRecentLocations() async {
+    Provider.of<LocationProvider>(context, listen: false).clearMarkers();
+    Provider.of<LocationProvider>(context, listen: false).clearPolyLine();
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? recentLocationString = prefs.getString('recent-locations');
 
@@ -219,7 +222,7 @@ class ScheduleWasteService {
     Provider.of<LocationProvider>(context, listen: false).updateMarkers(Marker(
         markerId: MarkerId('2'),
         icon: await BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(), 'images/location_marker.png'),
+            ImageConfiguration(), 'images/waste_marker.png'),
         position: LatLng(destinationLat, destinationLng),
         infoWindow: InfoWindow(title: 'Oyo Waste Management')));
 
@@ -294,7 +297,10 @@ class ScheduleWasteService {
         elevation: 10,
         builder: (BuildContext context) {
           return select_truck_bottomsheet(
-              screenHeight: screenHeight, location: locationName);
+            screenHeight: screenHeight,
+            location: locationName,
+            messangerKey: _messangerKey,
+          );
         });
   }
 

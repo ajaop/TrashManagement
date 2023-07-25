@@ -79,4 +79,9 @@ class LocationProvider extends ChangeNotifier {
     polylines[id] = polyline;
     notifyListeners();
   }
+
+  void clearPolyLine() {
+    polylines.clear();
+    notifyListeners();
+  }
 }
