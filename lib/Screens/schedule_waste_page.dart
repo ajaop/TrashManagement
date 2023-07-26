@@ -173,7 +173,13 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                                 scheduleWasteService.selectTruckType(
                                     Provider.of<LocationProvider>(context,
                                             listen: false)
-                                        .location);
+                                        .location,
+                                    Provider.of<LocationProvider>(context,
+                                            listen: false)
+                                        .currentLat,
+                                    Provider.of<LocationProvider>(context,
+                                            listen: false)
+                                        .currentLng);
                               },
                               child: Row(
                                 children: [
@@ -206,6 +212,9 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                             child: ListView.separated(
                               shrinkWrap: true,
                               itemCount: recentLocationsList?.length ?? 0,
+                              separatorBuilder: (context, index) => SizedBox(
+                                height: 15.0,
+                              ),
                               itemBuilder: (context, position) {
                                 return InkWell(
                                   onTap: () {
@@ -223,7 +232,13 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                                     scheduleWasteService.selectTruckType(
                                         recentLocationsList.reversed
                                             .toList()[position]
-                                            .name);
+                                            .name,
+                                        recentLocationsList.reversed
+                                            .toList()[position]
+                                            .lat,
+                                        recentLocationsList.reversed
+                                            .toList()[position]
+                                            .lng);
                                   },
                                   child: Column(children: [
                                     Padding(
@@ -265,9 +280,6 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                                   ]),
                                 );
                               },
-                              separatorBuilder: (context, index) => SizedBox(
-                                height: 15.0,
-                              ),
                             ),
                           )
                         ],

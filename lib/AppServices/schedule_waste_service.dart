@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:trash_management/Models/schedule_pickup.dart';
+import 'package:trash_management/Models/truck_type.dart';
 import 'package:trash_management/Screens/schedule_waste_page.dart';
 import '../Models/recent_location.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -14,6 +16,8 @@ import '../Provider/search_location.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_polyline_points/src/utils/request_enums.dart' as travel;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../Widgets/select_truck_bottomsheet.dart';
 import '../secrets.dart';
 
@@ -24,8 +28,8 @@ class ScheduleWasteService {
   final _messangerKey;
   double screenHeight = 0;
   late PolylinePoints polylinePoints;
-  ScheduleWastePickup sc = new ScheduleWastePickup();
   List<LatLng> polylineCoordinates = [];
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   ScheduleWasteService(this.context, this._messangerKey);
 
@@ -121,7 +125,7 @@ class ScheduleWasteService {
     if (state.contains('oyo') || state.contains('lagos')) {
       storeRecentLocation(p, lat, lng, detail.result.name);
       getDistance(lat, lng, detail.result.name);
-      selectTruckType(detail.result.name);
+      selectTruckType(detail.result.name, lat, lng);
     } else {
       error('Outside Jurisdiction', _messangerKey);
     }
@@ -284,7 +288,8 @@ class ScheduleWasteService {
         .updatePolyLine(polyline, id);
   }
 
-  Future<void> selectTruckType(String locationName) {
+  Future<void> selectTruckType(
+      String locationName, double locationLat, double locationLng) {
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     return showModalBottomSheet<void>(
@@ -298,10 +303,70 @@ class ScheduleWasteService {
         builder: (BuildContext context) {
           return select_truck_bottomsheet(
             screenHeight: screenHeight,
-            location: locationName,
+            locationName: locationName,
+            locationLat: locationLat,
+            locationLng: locationLng,
             messangerKey: _messangerKey,
           );
         });
+  }
+
+  selectDate(BuildContext context, String locationName, double locationLat,
+      double locationLng, TruckType truckType) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day + 1),
+      firstDate: DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day + 1),
+      lastDate: DateTime(DateTime.now().year + 1),
+      helpText: 'Select Pickup Date',
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData(
+            primaryColor: Color(0xffA2D1AE),
+            colorScheme:
+                ThemeData().colorScheme.copyWith(primary: Color(0xff1B3823)),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (pickedDate != null && pickedDate != DateTime.now()) {
+      bool isScheduled = await schedulePickupDate(
+          locationName, locationLat, locationLng, truckType, pickedDate);
+
+      if (isScheduled == true) {
+      } else {
+        error('Error Scheduling Waste Pickup', _messangerKey);
+      }
+    }
+  }
+
+  Future<bool> schedulePickupDate(String name, double lat, double lng,
+      TruckType truck, DateTime pickupDate) async {
+    final User? user = auth.currentUser;
+    if (user!.uid.isNotEmpty) {
+      try {
+        DocumentReference<Map<String, dynamic>> pickup =
+            FirebaseFirestore.instance.collection('waste_pickup').doc();
+
+        SchedulePickup schedulePickup = SchedulePickup(
+            locationName: name,
+            locationLat: lat,
+            locationLng: lng,
+            wasteTruck: truck,
+            pickupDate: pickupDate,
+            userId: user.uid);
+
+        // await pickup.set(schedulePickup.createMap());
+        return true;
+      } catch (e) {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 
   void error(errorMessage, _messangerKey) {
