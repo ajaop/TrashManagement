@@ -4,8 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:trash_management/CustomExtras/custom_icons_icons.dart';
 import '../AppServices/auth_service.dart';
 import '../AppServices/database_service.dart';
+import '../Models/user_details.dart';
+import '../Provider/location_provider.dart';
+import '../Provider/search_location.dart';
 import 'dashboard.dart';
 import 'package:solar_icons/solar_icons.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,6 +32,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    DatabaseService databaseService = DatabaseService();
+    UserDetails initial = UserDetails.dashboard();
     Size size = MediaQuery.of(context).size;
     double screenHeight = size.height;
     double screenWidth = size.width;
@@ -51,45 +57,59 @@ class _HomePageState extends State<HomePage> {
         break;
     }
 
-    return MaterialApp(
-      scaffoldMessengerKey: _messangerKey,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Color(0xffA2D1AE),
-        colorScheme:
-            ThemeData().colorScheme.copyWith(primary: Color(0xff95C2A1)),
+    return MultiProvider(
+      providers: [
+        StreamProvider<UserDetails>(
+          create: (context) => databaseService.getUserDetails(),
+          initialData: initial,
+        ),
+        ChangeNotifierProvider<SearchLocation>(
+          create: (context) => SearchLocation(false),
+        ),
+        ChangeNotifierProvider<LocationProvider>(
+          create: (context) => LocationProvider(),
+        )
+      ],
+      child: MaterialApp(
+        scaffoldMessengerKey: _messangerKey,
+        theme: ThemeData(
+          brightness: Brightness.light,
+          primaryColor: Color(0xffA2D1AE),
+          colorScheme:
+              ThemeData().colorScheme.copyWith(primary: Color(0xff95C2A1)),
+        ),
+        home: Scaffold(
+            body: widget,
+            bottomNavigationBar: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(screenWidth * 8.56),
+                bottomLeft: Radius.circular(screenWidth * 8.56),
+                bottomRight: Radius.circular(screenWidth * 8.56),
+                topLeft: Radius.circular(screenWidth * 8.56),
+              ),
+              child: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                showUnselectedLabels: false,
+                unselectedItemColor: Colors.white,
+                backgroundColor: Color(0xffA2D1AE),
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                      icon: Icon(SolarIconsOutline.home), label: 'Home'),
+                  BottomNavigationBarItem(
+                    icon: Icon(SolarIconsOutline.wallet),
+                    label: 'Wallet',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(SolarIconsOutline.user),
+                    label: 'Profile',
+                  ),
+                ],
+                currentIndex: _index,
+                onTap: (int index) => setState(() => _index = index),
+                selectedItemColor: Color(0xff1B3823),
+              ),
+            )),
       ),
-      home: Scaffold(
-          body: widget,
-          bottomNavigationBar: ClipRRect(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(screenWidth * 8.56),
-              bottomLeft: Radius.circular(screenWidth * 8.56),
-              bottomRight: Radius.circular(screenWidth * 8.56),
-              topLeft: Radius.circular(screenWidth * 8.56),
-            ),
-            child: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              showUnselectedLabels: false,
-              unselectedItemColor: Colors.white,
-              backgroundColor: Color(0xffA2D1AE),
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                    icon: Icon(SolarIconsOutline.home), label: 'Home'),
-                BottomNavigationBarItem(
-                  icon: Icon(SolarIconsOutline.wallet),
-                  label: 'Wallet',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(SolarIconsOutline.user),
-                  label: 'Profile',
-                ),
-              ],
-              currentIndex: _index,
-              onTap: (int index) => setState(() => _index = index),
-              selectedItemColor: Color(0xff1B3823),
-            ),
-          )),
     );
   }
 

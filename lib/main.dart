@@ -11,7 +11,6 @@ import 'AuthenticationFeature/signin.dart';
 import 'AuthenticationFeature/signup.dart';
 import 'Screens/homepage.dart';
 import 'OnboardingFeature/onboarding.dart';
-import 'package:provider/provider.dart';
 
 final _messangerKey = GlobalKey<ScaffoldMessengerState>();
 int? isviewed;
@@ -24,6 +23,7 @@ Future<void> main() async {
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   isviewed = prefs.getInt('onBoard');
+
   runApp(const MyApp());
 }
 
@@ -35,36 +35,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthService authService = AuthService();
-    DatabaseService databaseService = DatabaseService();
-    UserDetails initial = UserDetails.dashboard();
 
-    // authService.auth.signOut();
-    return MultiProvider(
-      providers: [
-        StreamProvider<UserDetails>(
-          create: (context) => databaseService.getUserDetails(),
-          initialData: initial,
-        ),
-        ChangeNotifierProvider<SearchLocation>(
-          create: (context) => SearchLocation(false),
-        ),
-        ChangeNotifierProvider<LocationProvider>(
-          create: (context) => LocationProvider(),
-        )
-      ],
-      child: MaterialApp(
-          scaffoldMessengerKey: _messangerKey,
-          initialRoute: '/',
-          routes: {
-            '/': (context) => isviewed == 0 || isviewed == null
-                ? const OnboardingPage()
-                : authService.checkIfLoggedIn(context, _messangerKey)
-                    ? HomePage()
-                    : SignIn(),
-            '/homepage': (context) => const HomePage(),
-            '/signup': (context) => const SignUp(),
-            '/signin': (context) => const SignIn(),
-          }),
-    );
+    return MaterialApp(
+        scaffoldMessengerKey: _messangerKey,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => isviewed == 0 || isviewed == null
+              ? const OnboardingPage()
+              : authService.checkIfLoggedIn(context, _messangerKey)
+                  ? HomePage()
+                  : SignIn(),
+          '/homepage': (context) => const HomePage(),
+          '/signup': (context) => const SignUp(),
+          '/signin': (context) => const SignIn(),
+        });
   }
 }

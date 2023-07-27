@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:trash_management/Models/schedule_pickup.dart';
 import 'package:trash_management/Models/truck_type.dart';
+import 'package:trash_management/Screens/payment_page.dart';
 import 'package:trash_management/Screens/schedule_waste_page.dart';
 import '../Models/recent_location.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -333,32 +334,51 @@ class ScheduleWasteService {
       },
     );
     if (pickedDate != null && pickedDate != DateTime.now()) {
-      bool isScheduled = await schedulePickupDate(
+      confirmPayment(
           locationName, locationLat, locationLng, truckType, pickedDate);
-
-      if (isScheduled == true) {
-      } else {
-        error('Error Scheduling Waste Pickup', _messangerKey);
-      }
     }
   }
 
-  Future<bool> schedulePickupDate(String name, double lat, double lng,
-      TruckType truck, DateTime pickupDate) async {
+  void confirmPayment(String name, double lat, double lng, TruckType truck,
+      DateTime pickupDate) {
+    final User? user = auth.currentUser;
+    SchedulePickup schedulePickup = SchedulePickup(
+        locationName: name,
+        locationLat: lat,
+        locationLng: lng,
+        wasteTruck: truck,
+        pickupDate: pickupDate,
+        userId: user!.uid);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PaymentPage(schedulePickup: schedulePickup)));
+  }
+
+  void makeFlutterWavePayment(SchedulePickup schedulePickup, String fullName,
+      String phoneNumber, String email) {
+    String amount =
+        schedulePickup.wasteTruck!.amount!.replaceAll('₦', '').trim();
+    print(amount);
+    print(fullName);
+    print(phoneNumber);
+    print(email);
+    // bool isScheduled = await schedulePickupDate(schedulePickup);
+
+    // if (isScheduled == true) {
+
+    // } else {
+    //   error('Error Scheduling Waste Pickup', _messangerKey);
+    // }
+  }
+
+  Future<bool> schedulePickupDate(SchedulePickup schedulePickup) async {
     final User? user = auth.currentUser;
     if (user!.uid.isNotEmpty) {
       try {
         DocumentReference<Map<String, dynamic>> pickup =
             FirebaseFirestore.instance.collection('waste_pickup').doc();
-
-        SchedulePickup schedulePickup = SchedulePickup(
-            locationName: name,
-            locationLat: lat,
-            locationLng: lng,
-            wasteTruck: truck,
-            pickupDate: pickupDate,
-            userId: user.uid);
-
         // await pickup.set(schedulePickup.createMap());
         return true;
       } catch (e) {

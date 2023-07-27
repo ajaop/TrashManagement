@@ -4,6 +4,7 @@ class UserDetails {
   String? firstname;
   String? lastname;
   String? email;
+  String? phoneNumber;
   String? password;
   String? gender;
   String? profileImageUrl;
@@ -15,6 +16,7 @@ class UserDetails {
       {required this.firstname,
       required this.lastname,
       required this.email,
+      required this.phoneNumber,
       required this.gender,
       required this.profileImageUrl,
       required this.points,
@@ -30,6 +32,7 @@ class UserDetails {
       'firstname': firstname,
       'lastname': lastname,
       'email': email,
+      'phoneNumber': phoneNumber,
       'gender': gender,
       'profileImageUrl': profileImageUrl,
       'points': points,
@@ -42,6 +45,7 @@ class UserDetails {
       : firstname = firestoreMap['firstname'],
         lastname = firestoreMap['lastname'],
         email = firestoreMap['email'],
+        phoneNumber = firestoreMap['phoneNumber'],
         gender = firestoreMap['gender'],
         profileImageUrl = firestoreMap['profileImageUrl'],
         points = firestoreMap['points'],

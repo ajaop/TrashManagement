@@ -5,7 +5,6 @@ import 'package:trash_management/AppServices/database_service.dart';
 import 'package:trash_management/AppServices/schedule_waste_service.dart';
 import 'package:trash_management/CustomExtras/custom_icons_icons.dart';
 import 'package:trash_management/Models/truck_type.dart';
-import 'datepicker_bottomsheet.dart';
 
 class select_truck_bottomsheet extends StatelessWidget {
   select_truck_bottomsheet(

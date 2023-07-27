@@ -17,16 +17,16 @@ class AuthService {
     user = auth.currentUser;
   }
 
-  Future<void> register(firstName, lastName, emailText, pass, gender,
-      profileUrl, context, _messangerKey) async {
+  Future<void> register(firstName, lastName, emailText, phoneNumber, pass,
+      gender, profileUrl, context, _messangerKey) async {
     try {
       final credential = await auth
           .createUserWithEmailAndPassword(email: emailText, password: pass)
           .then((value) =>
               print('user with user id ${value.user!.uid} is logged in'));
 
-      bool addData =
-          await sendToDB(firstName, lastName, emailText, gender, profileUrl);
+      bool addData = await sendToDB(
+          firstName, lastName, emailText, phoneNumber, gender, profileUrl);
 
       if (addData == true) {
         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -45,8 +45,8 @@ class AuthService {
           if (userExist == true) {
             error('The account already exists for that email.', _messangerKey);
           } else {
-            bool addData = await sendToDB(
-                firstName, lastName, emailText, gender, profileUrl);
+            bool addData = await sendToDB(firstName, lastName, emailText,
+                phoneNumber, gender, profileUrl);
             print('add data ${addData.toString()}');
             if (addData == true) {
               Navigator.of(context).pushNamedAndRemoveUntil(
@@ -115,7 +115,8 @@ class AuthService {
     }
   }
 
-  Future<bool> sendToDB(firstname, lastname, email, gender, profileUrl) async {
+  Future<bool> sendToDB(
+      firstname, lastname, email, phoneNumber, gender, profileUrl) async {
     final User? user = auth.currentUser;
     if (user!.uid.isNotEmpty) {
       try {
@@ -126,6 +127,7 @@ class AuthService {
             firstname: firstname,
             lastname: lastname,
             email: email,
+            phoneNumber: phoneNumber,
             gender: gender,
             profileImageUrl: profileUrl,
             points: 0,

@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
-
 import '../AppServices/auth_service.dart';
 import '../Models/user_details.dart';
 import '../loader_animation.dart';
 import 'signin.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -23,6 +23,7 @@ class _SignUpState extends State<SignUp> {
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  String fullPhoneNum = '';
   AuthService authService = AuthService();
   String buttonText = 'Create Account',
       titleText = 'Sign Up',
@@ -207,6 +208,44 @@ class _SignUpState extends State<SignUp> {
                               Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
+                                    'PhoneNumber',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge!
+                                        .copyWith(
+                                            fontSize: 16.0,
+                                            color: Color(0xff1B3823)),
+                                  )),
+                              const SizedBox(
+                                height: 5.0,
+                              ),
+                              IntlPhoneField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                initialCountryCode: 'NG',
+                                onChanged: (phone) {
+                                  if (phone.number.startsWith('0')) {
+                                    fullPhoneNum = phone.countryCode +
+                                        phone.number.substring(1);
+                                  } else {
+                                    fullPhoneNum = phone.completeNumber;
+                                  }
+                                },
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Phone Number is Required';
+                                  }
+                                },
+                              ),
+                              const SizedBox(
+                                height: 25.0,
+                              ),
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
                                     'Password',
                                     style: Theme.of(context)
                                         .textTheme
@@ -321,6 +360,7 @@ class _SignUpState extends State<SignUp> {
                                                     .toString(),
                                                 _emailController.text
                                                     .toString(),
+                                                fullPhoneNum,
                                                 _passwordController.text
                                                     .toString(),
                                                 selectedGender,
