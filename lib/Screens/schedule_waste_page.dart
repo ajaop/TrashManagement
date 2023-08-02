@@ -6,15 +6,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:trash_management/Provider/location_provider.dart';
 import 'package:trash_management/Provider/search_location.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
-import 'package:google_maps_webservice/places.dart';
-import 'package:google_api_headers/google_api_headers.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../AppServices/schedule_waste_service.dart';
 import '../CustomExtras/custom_icons_icons.dart';
 import '../Models/recent_location.dart';
 import '../Provider/search_location.dart';
-import '../Widgets/select_truck_bottomsheet.dart';
 import '../loader_animation.dart';
 
 class ScheduleWastePickup extends StatefulWidget {
@@ -72,20 +67,23 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
         body: Stack(
           alignment: Alignment.topCenter,
           children: [
-            Container(
-              height: searchLocation ? double.infinity : screenHeight * 0.59,
-              color: Color(0xffC9E4D0),
-              child: GoogleMap(
-                initialCameraPosition: _kGooglePlex,
-                markers: Set<Marker>.of(_markers),
-                polylines: Set<Polyline>.of(_polylines.values),
-                mapType: MapType.normal,
-                myLocationEnabled: true,
-                compassEnabled: true,
-                onMapCreated: (GoogleMapController controller) {
-                  Provider.of<LocationProvider>(context, listen: false)
-                      .setController(controller);
-                },
+            Hero(
+              tag: 'map',
+              child: Container(
+                height: searchLocation ? double.infinity : screenHeight * 0.59,
+                color: Color(0xffC9E4D0),
+                child: GoogleMap(
+                  initialCameraPosition: _kGooglePlex,
+                  markers: Set<Marker>.of(_markers),
+                  polylines: Set<Polyline>.of(_polylines.values),
+                  mapType: MapType.normal,
+                  myLocationEnabled: true,
+                  compassEnabled: true,
+                  onMapCreated: (GoogleMapController controller) {
+                    Provider.of<LocationProvider>(context, listen: false)
+                        .setController(controller);
+                  },
+                ),
               ),
             ),
             Visibility(
@@ -176,6 +174,9 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                                         .location,
                                     Provider.of<LocationProvider>(context,
                                             listen: false)
+                                        .locationDescription,
+                                    Provider.of<LocationProvider>(context,
+                                            listen: false)
                                         .currentLat,
                                     Provider.of<LocationProvider>(context,
                                             listen: false)
@@ -233,6 +234,9 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                                         recentLocationsList.reversed
                                             .toList()[position]
                                             .name,
+                                        recentLocationsList.reversed
+                                            .toList()[position]
+                                            .description,
                                         recentLocationsList.reversed
                                             .toList()[position]
                                             .lat,

@@ -55,6 +55,7 @@ dev_dependencies:
   phone_number: ^0.12.0
   intl_phone_field: 3.0.0
   flutterwave: ^1.0.3
+  intl: ^0.17.0
 
 
   # The "flutter_lints" package below contains a set of recommended lints to

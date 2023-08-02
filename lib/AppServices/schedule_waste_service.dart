@@ -47,14 +47,16 @@ class ScheduleWasteService {
 
     List<Placemark> placemarks = await placemarkFromCoordinates(
         currentLocation.latitude, currentLocation.longitude);
-    var address = placemarks.first.name;
+    String place = placemarks.first.name ?? 'No Name';
+    String city = placemarks.first.locality ?? ' ';
+    String country = placemarks.first.country ?? ' ';
+    var name = place;
+    var address = place + ', ' + city + ', ' + country;
 
     Provider.of<LocationProvider>(context, listen: false).updateLocation(
-        address ?? 'No Location',
-        currentLocation.latitude,
-        currentLocation.longitude);
+        name, address, currentLocation.latitude, currentLocation.longitude);
 
-    setCamera(currentLocation.latitude, currentLocation.longitude, address!);
+    setCamera(currentLocation.latitude, currentLocation.longitude, address);
 
     await getRecentLocations();
 
@@ -126,7 +128,8 @@ class ScheduleWasteService {
     if (state.contains('oyo') || state.contains('lagos')) {
       storeRecentLocation(p, lat, lng, detail.result.name);
       getDistance(lat, lng, detail.result.name);
-      selectTruckType(detail.result.name, lat, lng);
+      selectTruckType(detail.result.name,
+          detail.result.formattedAddress ?? detail.result.name, lat, lng);
     } else {
       error('Outside Jurisdiction', _messangerKey);
     }
@@ -289,8 +292,8 @@ class ScheduleWasteService {
         .updatePolyLine(polyline, id);
   }
 
-  Future<void> selectTruckType(
-      String locationName, double locationLat, double locationLng) {
+  Future<void> selectTruckType(String locationName, String address,
+      double locationLat, double locationLng) {
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     return showModalBottomSheet<void>(
@@ -305,6 +308,7 @@ class ScheduleWasteService {
           return select_truck_bottomsheet(
             screenHeight: screenHeight,
             locationName: locationName,
+            locationAddress: address,
             locationLat: locationLat,
             locationLng: locationLng,
             messangerKey: _messangerKey,
@@ -312,8 +316,8 @@ class ScheduleWasteService {
         });
   }
 
-  selectDate(BuildContext context, String locationName, double locationLat,
-      double locationLng, TruckType truckType) async {
+  selectDate(BuildContext context, String locationName, String locationAddress,
+      double locationLat, double locationLng, TruckType truckType) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime(
@@ -334,16 +338,17 @@ class ScheduleWasteService {
       },
     );
     if (pickedDate != null && pickedDate != DateTime.now()) {
-      confirmPayment(
-          locationName, locationLat, locationLng, truckType, pickedDate);
+      confirmPayment(locationName, locationAddress, locationLat, locationLng,
+          truckType, pickedDate);
     }
   }
 
-  void confirmPayment(String name, double lat, double lng, TruckType truck,
-      DateTime pickupDate) {
+  void confirmPayment(String name, String address, double lat, double lng,
+      TruckType truck, DateTime pickupDate) {
     final User? user = auth.currentUser;
     SchedulePickup schedulePickup = SchedulePickup(
         locationName: name,
+        locationAddress: address,
         locationLat: lat,
         locationLng: lng,
         wasteTruck: truck,

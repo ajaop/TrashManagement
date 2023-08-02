@@ -10,6 +10,7 @@ class LocationProvider extends ChangeNotifier {
   GoogleMapController? controller;
   bool isLoading = false;
   String location = '';
+  String locationDescription = '';
   double currentLat = 0, currentLng = 0;
   Map<PolylineId, Polyline> polylines = {};
 
@@ -18,10 +19,10 @@ class LocationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateLocation(String name, double lat, double lng) {
+  void updateLocation(String name, String description, double lat, double lng) {
     currentLat = lat;
     currentLng = lng;
-
+    locationDescription = description;
     location = name;
     notifyListeners();
   }

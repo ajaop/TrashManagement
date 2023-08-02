@@ -11,6 +11,7 @@ class select_truck_bottomsheet extends StatelessWidget {
       {Key? key,
       required this.screenHeight,
       required this.locationName,
+      required this.locationAddress,
       required this.locationLat,
       required this.locationLng,
       required this.messangerKey})
@@ -18,6 +19,7 @@ class select_truck_bottomsheet extends StatelessWidget {
 
   final double screenHeight;
   final String locationName;
+  final String locationAddress;
   final double locationLat;
   final double locationLng;
   final messangerKey;
@@ -90,8 +92,13 @@ class select_truck_bottomsheet extends StatelessWidget {
                 itemBuilder: (context, position) {
                   return InkWell(
                     onTap: () {
-                      scheduleWasteService.selectDate(context, locationName,
-                          locationLat, locationLng, wasteTrucksList[position]);
+                      scheduleWasteService.selectDate(
+                          context,
+                          locationName,
+                          locationAddress,
+                          locationLat,
+                          locationLng,
+                          wasteTrucksList[position]);
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0, right: 10.0),
