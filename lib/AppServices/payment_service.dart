@@ -20,10 +20,21 @@ class PaymentService {
 
   PaymentService(this.context, this._messangerKey, this.payStackClient);
 
+  double calculateTotal(subTotal, transportfee) {
+    double sub =
+        double.parse(subTotal.replaceAll(',', '').replaceAll('₦', '').trim());
+
+    double transport = double.parse(
+        transportfee.replaceAll(',', '').replaceAll('₦', '').trim());
+
+    double total = sub + transport;
+    return total;
+  }
+
   void makePayment(BuildContext context, SchedulePickup schedulePickup,
-      String fullName, String phoneNumber, String email) async {
-    String amount =
-        schedulePickup.wasteTruck!.amount!.replaceAll('₦', '').trim() + '00';
+      String fullName, String phoneNumber, String email, double total) async {
+    String amount = total.toStringAsFixed(2).replaceAll('.', '');
+
     int actualAmount = int.parse(amount);
     print(actualAmount);
     print(fullName);

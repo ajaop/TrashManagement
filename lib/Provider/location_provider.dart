@@ -10,8 +10,10 @@ class LocationProvider extends ChangeNotifier {
   GoogleMapController? controller;
   bool isLoading = false;
   String location = '';
+  String tripCost = '';
   String locationDescription = '';
-  double currentLat = 0, currentLng = 0;
+  double currentLat = 0;
+  double currentLng = 0;
   Map<PolylineId, Polyline> polylines = {};
 
   void updateLoading() {
@@ -74,6 +76,13 @@ class LocationProvider extends ChangeNotifier {
   void setController(GoogleMapController _controller) {
     controller = _controller;
     notifyListeners();
+  }
+
+  void updateTripCost(double distanceInKM) {
+    double cost = distanceInKM * 70;
+    tripCost = "₦ " +
+        cost.toStringAsFixed(2).replaceAllMapped(
+            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[1]},");
   }
 
   void updatePolyLine(Polyline polyline, PolylineId id) {

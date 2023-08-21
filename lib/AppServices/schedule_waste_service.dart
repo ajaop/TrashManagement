@@ -274,6 +274,16 @@ class ScheduleWasteService {
       });
     }
 
+    //calculating distance
+    double totalDistance = 0;
+    for (var i = 0; i < polylineCoordinates.length - 1; i++) {
+      totalDistance += calculateDistance(
+          polylineCoordinates[i].latitude,
+          polylineCoordinates[i].longitude,
+          polylineCoordinates[i + 1].latitude,
+          polylineCoordinates[i + 1].longitude);
+    }
+
     // Defining an ID
     PolylineId id = const PolylineId('poly');
 
@@ -289,6 +299,17 @@ class ScheduleWasteService {
 
     Provider.of<LocationProvider>(context, listen: false)
         .updatePolyLine(polyline, id);
+
+    Provider.of<LocationProvider>(context, listen: false)
+        .updateTripCost(totalDistance);
+  }
+
+  double calculateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var a = 0.5 -
+        cos((lat2 - lat1) * p) / 2 +
+        cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
   }
 
   Future<void> selectTruckType(String locationName, String address,

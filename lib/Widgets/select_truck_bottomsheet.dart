@@ -29,19 +29,19 @@ class select_truck_bottomsheet extends StatelessWidget {
         truckName: 'Mini Waste Truck',
         truckMinSize: '12kg',
         truckMaxSize: '17kg',
-        amount: '₦ 1500'),
+        amount: '₦ 1,500'),
     TruckType(
         truckImg: 'images/garbage_truck2.png',
         truckName: 'Maxi Waste Truck',
         truckMinSize: '12kg',
         truckMaxSize: '17kg',
-        amount: '₦ 2000'),
+        amount: '₦ 2,000'),
     TruckType(
         truckImg: 'images/garbage_truck3.png',
         truckName: 'Large Waste Truck',
         truckMinSize: '12kg',
         truckMaxSize: '17kg',
-        amount: '₦ 2500')
+        amount: '₦ 2,500')
   ];
   @override
   Widget build(BuildContext context) {
