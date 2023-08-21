@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:trash_management/Models/schedule_pickup.dart';
 import 'package:trash_management/Models/truck_type.dart';
-import 'package:trash_management/Screens/payment_page.dart';
-import 'package:trash_management/Screens/schedule_waste_page.dart';
+import 'package:trash_management/Screens/confirm_pickup_page.dart';
 import '../Models/recent_location.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,12 +17,11 @@ import '../Provider/search_location.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_polyline_points/src/utils/request_enums.dart' as travel;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../Widgets/select_truck_bottomsheet.dart';
-import '../secrets.dart';
+import '../env/env.dart';
 
-const kGoogleApiKey = Secrets.API_KEY;
+const kGoogleApiKey = Env.googleApiKey;
 
 class ScheduleWasteService {
   final BuildContext context;
@@ -261,7 +260,7 @@ class ScheduleWasteService {
     polylinePoints = PolylinePoints();
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      Secrets.API_KEY2,
+      Env.googleApiKey2,
       PointLatLng(startLatitude, startLongitude),
       PointLatLng(destinationLatitude, destinationLongitude),
       travelMode: travel.TravelMode.driving,
@@ -358,40 +357,8 @@ class ScheduleWasteService {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => PaymentPage(schedulePickup: schedulePickup)));
-  }
-
-  void makeFlutterWavePayment(SchedulePickup schedulePickup, String fullName,
-      String phoneNumber, String email) {
-    String amount =
-        schedulePickup.wasteTruck!.amount!.replaceAll('₦', '').trim();
-    print(amount);
-    print(fullName);
-    print(phoneNumber);
-    print(email);
-    // bool isScheduled = await schedulePickupDate(schedulePickup);
-
-    // if (isScheduled == true) {
-
-    // } else {
-    //   error('Error Scheduling Waste Pickup', _messangerKey);
-    // }
-  }
-
-  Future<bool> schedulePickupDate(SchedulePickup schedulePickup) async {
-    final User? user = auth.currentUser;
-    if (user!.uid.isNotEmpty) {
-      try {
-        DocumentReference<Map<String, dynamic>> pickup =
-            FirebaseFirestore.instance.collection('waste_pickup').doc();
-        // await pickup.set(schedulePickup.createMap());
-        return true;
-      } catch (e) {
-        return false;
-      }
-    } else {
-      return false;
-    }
+            builder: (context) =>
+                ConfirmPickupPage(schedulePickup: schedulePickup)));
   }
 
   void error(errorMessage, _messangerKey) {
@@ -405,7 +372,7 @@ class ScheduleWasteService {
           textAlign: TextAlign.center,
         )));
 
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(seconds: 2), () {
       _messangerKey.currentState!.hideCurrentSnackBar();
     });
   }

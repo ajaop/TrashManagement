@@ -29,6 +29,8 @@
 .packages
 .pub-cache/
 .pub/
+.env
+env.g.dart
 /build/
 
 # Web related

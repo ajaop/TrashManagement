@@ -1,29 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trash_management/AppServices/payment_service.dart';
 import 'package:trash_management/AppServices/schedule_waste_service.dart';
 import 'package:trash_management/Models/schedule_pickup.dart';
 import '../Models/user_details.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import '../Provider/location_provider.dart';
+import '../env/env.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 
-class PaymentPage extends StatefulWidget {
-  const PaymentPage({Key? key, required this.schedulePickup}) : super(key: key);
+class ConfirmPickupPage extends StatefulWidget {
+  const ConfirmPickupPage({Key? key, required this.schedulePickup})
+      : super(key: key);
   final SchedulePickup schedulePickup;
 
   @override
-  State<PaymentPage> createState() => _PaymentPageState();
+  State<ConfirmPickupPage> createState() => _ConfirmPickupPageState();
 }
 
-class _PaymentPageState extends State<PaymentPage> {
+class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
   final _messangerKey = GlobalKey<ScaffoldMessengerState>();
+  final payStackClient = PaystackPlugin();
   bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    payStackClient.initialize(publicKey: Env.paystackTestPublicKey);
+  }
 
   @override
   Widget build(BuildContext context) {
     UserDetails userDetails = Provider.of<UserDetails>(context);
     ScheduleWasteService scheduleWasteService =
         ScheduleWasteService(context, _messangerKey);
+    PaymentService paymentService =
+        PaymentService(context, _messangerKey, payStackClient);
     String fullname = userDetails.lastname! + ' ' + userDetails.firstname!;
     String phone = userDetails.phoneNumber!;
     String email = userDetails.email!;
@@ -129,6 +142,9 @@ class _PaymentPageState extends State<PaymentPage> {
                       height: 15.0,
                     ),
                     InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                       child: Hero(
                         tag: 'map',
                         child: Container(
@@ -197,6 +213,9 @@ class _PaymentPageState extends State<PaymentPage> {
                       height: 15.0,
                     ),
                     InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                       child: Container(
                         padding: EdgeInsets.all(15.0),
                         decoration: BoxDecoration(
@@ -302,18 +321,23 @@ class _PaymentPageState extends State<PaymentPage> {
                                 .button!
                                 .copyWith(fontSize: 20.0, color: Colors.white)),
                         onPressed: !_loading
-                            ? () {
+                            ? () async {
                                 setState(() {
                                   _loading = true;
                                 });
-                                // scheduleWasteService.makeFlutterWavePayment(
-                                //     widget.schedulePickup,
-                                //     fullname,
-                                //     phone,
-                                //     email);
+                                paymentService.makePayment(
+                                    context,
+                                    widget.schedulePickup,
+                                    fullname,
+                                    phone,
+                                    email);
+
+                                setState(() {
+                                  _loading = false;
+                                });
                               }
                             : null,
-                        child: Text('Confirm Details')),
+                        child: const Text('Make Payment')),
                   ),
                 )
               ],

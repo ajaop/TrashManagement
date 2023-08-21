@@ -29,7 +29,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  envify: 2.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -54,8 +54,10 @@ dev_dependencies:
   solar_icons: ^0.0.5
   phone_number: ^0.12.0
   intl_phone_field: 3.0.0
-  flutterwave: ^1.0.3
   intl: ^0.17.0
+  envify_generator: 2.0.0
+  build_runner: 2.2.0
+  flutter_paystack: ^1.0.5
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
