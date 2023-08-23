@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:trash_management/AppServices/database_service.dart';
 import 'package:trash_management/Provider/search_location.dart';
 import 'package:trash_management/Models/user_details.dart';
+import 'package:trash_management/Screens/payment_successful.dart';
 import 'Provider/location_provider.dart';
 import 'firebase_options.dart';
 import 'AppServices/auth_service.dart';
@@ -49,5 +50,10 @@ class MyApp extends StatelessWidget {
           '/signup': (context) => const SignUp(),
           '/signin': (context) => const SignIn(),
         });
+
+    // return MaterialApp(
+    //     scaffoldMessengerKey: _messangerKey,
+    //     initialRoute: '/',
+    //     routes: {'/': (context) => PaymentSuccessful()});
   }
 }
