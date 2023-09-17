@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:trash_management/CustomExtras/custom_icons_icons.dart';
 import '../AppServices/auth_service.dart';
 import '../AppServices/database_service.dart';
 import '../Models/user_details.dart';
@@ -9,7 +7,6 @@ import '../Provider/location_provider.dart';
 import '../Provider/search_location.dart';
 import 'dashboard.dart';
 import 'package:solar_icons/solar_icons.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -35,7 +32,6 @@ class _HomePageState extends State<HomePage> {
     DatabaseService databaseService = DatabaseService();
     UserDetails initial = UserDetails.dashboard();
     Size size = MediaQuery.of(context).size;
-    double screenHeight = size.height;
     double screenWidth = size.width;
 
     Widget widget = Container();

@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:trash_management/AppServices/auth_service.dart';
+import 'package:trash_management/Models/pickup_details.dart';
 
+import '../Models/payment_details.dart';
 import '../Models/user_details.dart';
 
 class DatabaseService {
@@ -26,6 +28,28 @@ class DatabaseService {
         .map((snapshot) => snapshot.docs
             .map((document) => UserDetails.fromFirestore(document.data()))
             .first);
+  }
+
+    Future<bool> sendPickupDetailsToDb(PickupDetails pickupDetails, PaymentDetails paymentDetails) async {
+    final User? user = auth.currentUser;
+    if (user!.uid.isNotEmpty) {
+      try {
+        CollectionReference<Map<String, dynamic>> pickups =
+            FirebaseFirestore.instance.collection('WastePickups');
+
+
+        await pickups.doc().set({
+        "PickupDetails" : pickupDetails.createMap(),
+        "PaymentDetails" : paymentDetails.createMap()
+        });
+
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    return false;
   }
 
   void displayError(errorMessage, _messangerKey) {

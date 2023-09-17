@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:trash_management/Models/payment.dart';
-import 'package:trash_management/Models/schedule_pickup.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:trash_management/AppServices/database_service.dart';
+import 'package:trash_management/Models/payment_details.dart';
+import 'package:trash_management/Models/pickup_details.dart';
 import 'package:http/http.dart' as http;
 import 'package:trash_management/Screens/payment_successful.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +18,7 @@ class PaymentService {
   final _messangerKey;
   final payStackClient;
   FirebaseAuth auth = FirebaseAuth.instance;
+  DatabaseService databaseService = DatabaseService();
 
   PaymentService(this.context, this._messangerKey, this.payStackClient);
 
@@ -34,7 +33,7 @@ class PaymentService {
     return total;
   }
 
-  Future<void> makePayment(BuildContext context, SchedulePickup schedulePickup,
+  Future<void> makePayment(BuildContext context, PickupDetails pickupDetails,
       String fullName, String phoneNumber, String email, double total) async {
     String amount = total.toStringAsFixed(2).replaceAll('.', '');
 
@@ -51,27 +50,12 @@ class PaymentService {
         charge: charge, method: CheckoutMethod.selectable);
 
     if (response.status) {
-      await _verifyOnServer(response.reference!, total);
+      await _verifyOnServer(response.reference!, total, pickupDetails);
     } else {
       error('Error Making Payment', _messangerKey);
     }
   }
 
-  Future<bool> schedulePickupDate(SchedulePickup schedulePickup) async {
-    final User? user = auth.currentUser;
-    if (user!.uid.isNotEmpty) {
-      try {
-        DocumentReference<Map<String, dynamic>> pickup =
-            FirebaseFirestore.instance.collection('waste_pickup').doc();
-        // await pickup.set(schedulePickup.createMap());
-        return true;
-      } catch (e) {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
 
   String _getReference() {
     String platform;
@@ -108,7 +92,7 @@ class PaymentService {
     return accessCode;
   }
 
-  Future<void> _verifyOnServer(String reference, double total) async {
+  Future<void> _verifyOnServer(String reference, double total, PickupDetails pickupDetails) async {
     try {
       Map<String, String> headers = {
         'Content-Type': 'application/json',
@@ -125,20 +109,26 @@ class PaymentService {
         String amount = formatAmount(total);
         String date = body['data']['paid_at'].toString();
         String formattedPaymentDate = formatDate(date);
-        Payment payment = Payment(
+        PaymentDetails paymentDetails = PaymentDetails(
             amount: amount,
             refNumber: refNumber,
-            paymentDate: formattedPaymentDate,
+            paymentDate: date,
+            formattedPaymentDate: formattedPaymentDate,
             paymentChannel: channel);
 
-        Navigator.pushAndRemoveUntil<void>(
+        await databaseService.sendPickupDetailsToDb(pickupDetails, paymentDetails);
+        
+        if (context.mounted) {
+          Navigator.pushAndRemoveUntil<void>(
           context,
           MaterialPageRoute<void>(
               builder: (BuildContext context) => PaymentSuccessful(
-                    payment: payment,
+                    paymentDetails: paymentDetails,
                   )),
           ModalRoute.withName('/'),
         );
+        }     
+        
       } else {
         error('Error Making Payment', _messangerKey);
       }
@@ -150,7 +140,7 @@ class PaymentService {
 
   String formatDate(String date) {
     String formattedDate =
-        DateFormat('dd-MM-yyyy, HH:mm:ss').format(DateTime.parse(date));
+        DateFormat('dd-MM-yyyy').format(DateTime.parse(date));
     return formattedDate;
   }
 

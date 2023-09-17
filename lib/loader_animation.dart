@@ -243,8 +243,8 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
 
   Future<void> _playAnimation() async {
     try {
-      await _controller.forward().orCancel;
-      _controller.repeat(reverse: false).orCancel;
+      await _controller.forward();
+      _controller.repeat(reverse: false);
     } on TickerCanceled {
       // the animation got canceled, probably because it was disposed of
     }

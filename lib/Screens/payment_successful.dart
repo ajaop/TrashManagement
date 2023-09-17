@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:solar_icons/solar_icons.dart';
 
-import '../Models/payment.dart';
+import '../Models/payment_details.dart';
 
 class PaymentSuccessful extends StatefulWidget {
-  const PaymentSuccessful({Key? key, required this.payment}) : super(key: key);
+  const PaymentSuccessful({Key? key, required this.paymentDetails}) : super(key: key);
 
-  final Payment payment;
+  final PaymentDetails paymentDetails;
 
   @override
   State<PaymentSuccessful> createState() => _PaymentSuccessfulState();
@@ -15,6 +15,8 @@ class PaymentSuccessful extends StatefulWidget {
 class _PaymentSuccessfulState extends State<PaymentSuccessful> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double screenWidth = size.width;
     return MaterialApp(
       theme: ThemeData(
         brightness: Brightness.light,
@@ -105,7 +107,7 @@ class _PaymentSuccessfulState extends State<PaymentSuccessful> {
                       SizedBox(
                         height: 5.0,
                       ),
-                      Text(widget.payment.amount,
+                      Text(widget.paymentDetails.amount,
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme
@@ -132,15 +134,15 @@ class _PaymentSuccessfulState extends State<PaymentSuccessful> {
                                   .bodyLarge!
                                   .copyWith(
                                       color: Color(0xff1B3823),
-                                      fontSize: 18.0,
+                                      fontSize: 0.044 * screenWidth,
                                       fontWeight: FontWeight.normal)),
-                          Text(widget.payment.refNumber,
+                          Text(widget.paymentDetails.refNumber,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
                                   .copyWith(
                                       color: Color(0xff1B3823),
-                                      fontSize: 18.0,
+                                      fontSize: 0.044 * screenWidth,
                                       fontWeight: FontWeight.w600))
                         ],
                       ),
@@ -156,15 +158,15 @@ class _PaymentSuccessfulState extends State<PaymentSuccessful> {
                                   .bodyLarge!
                                   .copyWith(
                                       color: Color(0xff1B3823),
-                                      fontSize: 18.0,
+                                      fontSize: 0.044 * screenWidth,
                                       fontWeight: FontWeight.normal)),
-                          Text(widget.payment.paymentDate,
+                          Text(widget.paymentDetails.formattedPaymentDate!,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
                                   .copyWith(
                                       color: Color(0xff1B3823),
-                                      fontSize: 18.0,
+                                      fontSize: 0.044 * screenWidth,
                                       fontWeight: FontWeight.w600))
                         ],
                       ),
@@ -180,15 +182,15 @@ class _PaymentSuccessfulState extends State<PaymentSuccessful> {
                                   .bodyLarge!
                                   .copyWith(
                                       color: Color(0xff1B3823),
-                                      fontSize: 18.0,
+                                      fontSize: 0.044 * screenWidth,
                                       fontWeight: FontWeight.normal)),
-                          Text(widget.payment.paymentChannel,
+                          Text(widget.paymentDetails.paymentChannel,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
                                   .copyWith(
                                       color: Color(0xff1B3823),
-                                      fontSize: 18.0,
+                                      fontSize: 0.044 * screenWidth,
                                       fontWeight: FontWeight.w600))
                         ],
                       ),

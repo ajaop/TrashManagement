@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:solar_icons/solar_icons.dart';
-import 'package:trash_management/AppServices/database_service.dart';
 import 'package:trash_management/AppServices/schedule_waste_service.dart';
-import 'package:trash_management/CustomExtras/custom_icons_icons.dart';
 import 'package:trash_management/Models/truck_type.dart';
 
 class select_truck_bottomsheet extends StatelessWidget {
@@ -45,6 +43,8 @@ class select_truck_bottomsheet extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double screenWidth = size.width;
     ScheduleWasteService scheduleWasteService =
         ScheduleWasteService(context, messangerKey);
 
@@ -65,7 +65,7 @@ class select_truck_bottomsheet extends StatelessWidget {
                 Icon(
                   SolarIconsOutline.mapPointWave,
                   color: Color(0xff1B3823),
-                  size: 30,
+                  size: 0.077 * screenWidth,
                 ),
                 SizedBox(
                   width: 20.0,
@@ -113,7 +113,7 @@ class select_truck_bottomsheet extends StatelessWidget {
                           children: [
                             ImageIcon(
                               AssetImage(wasteTrucksList[position].truckImg),
-                              size: 50.0,
+                              size: 0.129 * screenWidth,
                               color: Color(0xff08110B),
                             ),
                             Column(
@@ -123,7 +123,7 @@ class select_truck_bottomsheet extends StatelessWidget {
                                         .textTheme
                                         .bodyLarge!
                                         .copyWith(
-                                            fontSize: 19.0,
+                                            fontSize: 0.044 * screenWidth,
                                             color: Color(0xff08110B),
                                             fontWeight: FontWeight.bold)),
                                 Text(
@@ -134,7 +134,7 @@ class select_truck_bottomsheet extends StatelessWidget {
                                         .textTheme
                                         .bodyLarge!
                                         .copyWith(
-                                            fontSize: 17.0,
+                                            fontSize: 0.044 * screenWidth,
                                             color: Color(0xff08110B),
                                             fontWeight: FontWeight.normal))
                               ],
@@ -144,7 +144,7 @@ class select_truck_bottomsheet extends StatelessWidget {
                                     .textTheme
                                     .bodyLarge!
                                     .copyWith(
-                                        fontSize: 19.0,
+                                        fontSize: 0.044 * screenWidth, //19
                                         color: Color(0xff08110B),
                                         fontWeight: FontWeight.w800))
                           ],

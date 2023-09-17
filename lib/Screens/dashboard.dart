@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:trash_management/AppServices/database_service.dart';
 import 'package:trash_management/Models/user_details.dart';
 import 'package:trash_management/Screens/schedule_waste_page.dart';
 import 'package:trash_management/ShimmerFeature/shimmer.dart';
@@ -28,7 +27,6 @@ class Dashboard extends StatelessWidget {
     UserDetails userDetails = Provider.of<UserDetails>(context);
     //UserDetails userDetails = UserDetails.dashboard();
     Size size = MediaQuery.of(context).size;
-    double screenHeight = size.height;
     double screenWidth = size.width;
 
     return MaterialApp(
@@ -276,7 +274,7 @@ class Dashboard extends StatelessWidget {
                       ShimmerLoading(
                         isLoading: true,
                         child: Container(
-                          width: screenWidth * 0.4,
+                          width: screenWidth * 0.42,
                           decoration: BoxDecoration(
                             color: Color(0xffEEF7F0),
                             borderRadius: BorderRadius.circular(30),
@@ -285,7 +283,7 @@ class Dashboard extends StatelessWidget {
                       )
                     else
                       Container(
-                        width: screenWidth * 0.4,
+                        width: screenWidth * 0.43,
                         padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),

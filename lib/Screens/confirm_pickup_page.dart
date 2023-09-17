@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trash_management/AppServices/payment_service.dart';
-import 'package:trash_management/AppServices/schedule_waste_service.dart';
-import 'package:trash_management/Models/schedule_pickup.dart';
+import 'package:trash_management/Models/pickup_details.dart';
 import '../Models/user_details.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -13,9 +12,9 @@ import 'package:flutter_paystack/flutter_paystack.dart';
 import '../loader_animation.dart';
 
 class ConfirmPickupPage extends StatefulWidget {
-  const ConfirmPickupPage({Key? key, required this.schedulePickup})
+  const ConfirmPickupPage({Key? key, required this.pickupDetails})
       : super(key: key);
-  final SchedulePickup schedulePickup;
+  final PickupDetails pickupDetails;
 
   @override
   State<ConfirmPickupPage> createState() => _ConfirmPickupPageState();
@@ -42,19 +41,22 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
     String phone = userDetails.phoneNumber!;
     String email = userDetails.email!;
     String formattedDate =
-        DateFormat.yMMMd().format(widget.schedulePickup.pickupDate!);
+        DateFormat.yMMMd().format(widget.pickupDetails.pickupDate!);
     double totalAmt = paymentService.calculateTotal(
-        widget.schedulePickup.wasteTruck!.amount!, locationProvider.tripCost);
+        widget.pickupDetails.wasteTruck!.amount!, locationProvider.tripCost);
     String formattedTotal = paymentService.formatAmount(totalAmt);
     final CameraPosition initialLoc = CameraPosition(
-      target: LatLng(widget.schedulePickup.locationLat!,
-          widget.schedulePickup.locationLng!),
+      target: LatLng(widget.pickupDetails.locationLat!,
+          widget.pickupDetails.locationLng!),
       zoom: 14.4746,
     );
     final List<Marker> _markers =
         Provider.of<LocationProvider>(context).markers;
     Map<PolylineId, Polyline> _polylines =
         Provider.of<LocationProvider>(context).polylines;
+    Size size = MediaQuery.of(context).size;
+    double screenWidth = size.width;
+    double screenHeight = size.height;
 
     return MaterialApp(
       scaffoldMessengerKey: _messangerKey,
@@ -74,7 +76,7 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                   child: Stack(
                     children: [
                       SizedBox(
-                        height: 530,
+                        height: 0.533 * screenHeight,
                         child: ListView(
                           shrinkWrap: true,
                           children: [
@@ -148,7 +150,7 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                       ),
                                       Text(
                                           widget
-                                              .schedulePickup.locationAddress!,
+                                              .pickupDetails.locationAddress!,
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -195,34 +197,34 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                   children: [
                                     ImageIcon(
                                       AssetImage(widget
-                                          .schedulePickup.wasteTruck!.truckImg),
-                                      size: 50.0,
+                                          .pickupDetails.wasteTruck!.truckImg),
+                                      size: 0.129 * screenWidth,
                                       color: Color(0xff08110B),
                                     ),
                                     Column(
                                       children: [
                                         Text(
-                                            widget.schedulePickup.wasteTruck!
+                                            widget.pickupDetails.wasteTruck!
                                                 .truckName!,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge!
                                                 .copyWith(
-                                                    fontSize: 19.0,
+                                                    fontSize: 0.044 * screenWidth,
                                                     color: Color(0xff08110B),
                                                     fontWeight:
                                                         FontWeight.bold)),
                                         Text(
-                                            widget.schedulePickup.wasteTruck!
+                                            widget.pickupDetails.wasteTruck!
                                                     .truckMinSize! +
                                                 ' - ' +
-                                                widget.schedulePickup
+                                                widget.pickupDetails
                                                     .wasteTruck!.truckMaxSize!,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge!
                                                 .copyWith(
-                                                    fontSize: 17.0,
+                                                    fontSize: 0.044 * screenWidth,
                                                     color: Color(0xff08110B),
                                                     fontWeight:
                                                         FontWeight.normal))
@@ -230,12 +232,12 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                     ),
                                     Text(
                                         widget
-                                            .schedulePickup.wasteTruck!.amount!,
+                                            .pickupDetails.wasteTruck!.amount!,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge!
                                             .copyWith(
-                                                fontSize: 19.0,
+                                                fontSize: 0.044 * screenWidth,
                                                 color: Color(0xff08110B),
                                                 fontWeight: FontWeight.w800))
                                   ],
@@ -303,7 +305,7 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                             fontWeight: FontWeight.w300,
                                             fontSize: 19.0,
                                             color: Color(0xff08110B))),
-                                Text(widget.schedulePickup.wasteTruck!.amount!,
+                                Text(widget.pickupDetails.wasteTruck!.amount!,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!
@@ -386,12 +388,12 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                       });
                                       await paymentService.makePayment(
                                           context,
-                                          widget.schedulePickup,
+                                          widget.pickupDetails,
                                           fullname,
                                           phone,
                                           email,
                                           totalAmt);
-
+                      
                                       setState(() {
                                         _loading = false;
                                       });

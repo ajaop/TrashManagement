@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:trash_management/Models/truck_type.dart';
 
-class SchedulePickup {
+class PickupDetails {
   String? locationName;
   String? locationAddress;
   double? locationLat;
@@ -10,7 +10,7 @@ class SchedulePickup {
   DateTime? pickupDate;
   String userId;
 
-  SchedulePickup(
+  PickupDetails(
       {required this.locationName,
       required this.locationAddress,
       required this.locationLat,
@@ -25,18 +25,23 @@ class SchedulePickup {
       'LocationAddress': locationAddress,
       'LocationLat': locationLat,
       'LocationLng': locationLng,
-      'WasteTruck': wasteTruck,
+      'WasteTruck': wasteTruck!.createMap(),
       'PickupDate': pickupDate,
       'UserId': userId
     };
   }
 
-  SchedulePickup.fromFirestore(Map<String, dynamic> firestoreMap)
+  PickupDetails.fromFirestore(Map<String, dynamic> firestoreMap)
       : locationName = firestoreMap['LocationName'],
         locationAddress = firestoreMap['LocationAddress'],
         locationLat = firestoreMap['LocationLat'],
         locationLng = firestoreMap['LocationLng'],
-        wasteTruck = firestoreMap['WasteTruck'],
+        wasteTruck = firestoreMap['WasteTruck'].reference.collection("Items").get().then((value) => value
+            .docs
+            .map((docSnapshot) =>
+                TruckType.fromFirestore(docSnapshot))
+            .toList()),
         pickupDate = firestoreMap['PickupDate'].toDate(),
         userId = firestoreMap['UserId'];
+        
 }

@@ -235,7 +235,7 @@ class _SignUpState extends State<SignUp> {
                                   }
                                 },
                                 validator: (value) {
-                                  if (value!.isEmpty) {
+                                  if (value!.toString().isEmpty) {
                                     return 'Phone Number is Required';
                                   }
                                 },

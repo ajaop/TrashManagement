@@ -8,7 +8,6 @@ import '../AuthenticationFeature/signup.dart';
 import '../Models/user_details.dart';
 
 class AuthService {
-  FirebaseFirestore _db = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
   User? user;
   bool doesExist = true;
@@ -20,11 +19,10 @@ class AuthService {
   Future<void> register(firstName, lastName, emailText, phoneNumber, pass,
       gender, profileUrl, context, _messangerKey) async {
     try {
-      final credential = await auth
-          .createUserWithEmailAndPassword(email: emailText, password: pass)
-          .then((value) =>
-              print('user with user id ${value.user!.uid} is logged in'));
-
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    email: emailText,
+    password: pass,
+  );
       bool addData = await sendToDB(
           firstName, lastName, emailText, phoneNumber, gender, profileUrl);
 

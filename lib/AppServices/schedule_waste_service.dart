@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:trash_management/Models/schedule_pickup.dart';
+import 'package:trash_management/Models/pickup_details.dart';
 import 'package:trash_management/Models/truck_type.dart';
 import 'package:trash_management/Screens/confirm_pickup_page.dart';
 import '../Models/recent_location.dart';
@@ -277,6 +277,7 @@ class ScheduleWasteService {
     //calculating distance
     double totalDistance = 0;
     for (var i = 0; i < polylineCoordinates.length - 1; i++) {
+      
       totalDistance += calculateDistance(
           polylineCoordinates[i].latitude,
           polylineCoordinates[i].longitude,
@@ -366,7 +367,7 @@ class ScheduleWasteService {
   void confirmPayment(String name, String address, double lat, double lng,
       TruckType truck, DateTime pickupDate) {
     final User? user = auth.currentUser;
-    SchedulePickup schedulePickup = SchedulePickup(
+    PickupDetails pickupDetails = PickupDetails(
         locationName: name,
         locationAddress: address,
         locationLat: lat,
@@ -379,7 +380,7 @@ class ScheduleWasteService {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                ConfirmPickupPage(schedulePickup: schedulePickup)));
+                ConfirmPickupPage(pickupDetails: pickupDetails)));
   }
 
   void error(errorMessage, _messangerKey) {

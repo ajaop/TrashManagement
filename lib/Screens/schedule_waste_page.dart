@@ -1,15 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:trash_management/Provider/location_provider.dart';
 import 'package:trash_management/Provider/search_location.dart';
 import 'package:provider/provider.dart';
 import '../AppServices/schedule_waste_service.dart';
 import '../CustomExtras/custom_icons_icons.dart';
 import '../Models/recent_location.dart';
-import '../Provider/search_location.dart';
 import '../loader_animation.dart';
 
 class ScheduleWastePickup extends StatefulWidget {
@@ -31,7 +27,7 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       scheduleWasteService = ScheduleWasteService(context, _messangerKey);
       scheduleWasteService.getUserCurrentLocation();
     });

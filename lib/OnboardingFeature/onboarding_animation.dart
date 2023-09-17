@@ -150,9 +150,11 @@ class OnboardingAnimation extends StatelessWidget {
                 height: 40.0,
               ),
               const Align(
+                alignment: Alignment.center,
                   child: Text(
                 'Be a recycler, Be a saver',
-                style: TextStyle(fontSize: 27.0, fontWeight: FontWeight.w800),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 27.0, fontWeight: FontWeight.w800, ),
               )),
               SizedBox(
                 height: 10.0,
