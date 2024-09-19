@@ -7,6 +7,7 @@ A mobile app meant to help with disposing and recycling trash
 # App Images
 
 ![confirm_pickup](https://github.com/user-attachments/assets/f8d991ee-1ce1-4488-9e07-df144a5c7703)
+![dashboard](https://github.com/user-attachments/assets/2a29aec6-355e-41d7-9f78-a78a7ede4448)
 
 
 # Overview
