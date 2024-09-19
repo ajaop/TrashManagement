@@ -5,7 +5,8 @@ A mobile app meant to help with disposing and recycling trash
 [![WATCH THE VIDEO]](https://www.linkedin.com/posts/ajao-semiloore-880889220_so-a-few-months-back-i-had-an-idea-about-activity-7100592059035656192-QJiQ?utm_source=share&utm_medium=member_desktop)
 
 # App Images
-![truck_type](https://github.com/user-attachments/assets/607bb0cb-043c-4148-9376-119e86110f8f) ![signup2](https://github.com/user-attachments/assets/e8b2e722-ab52-4100-b0d1-4705dd571888)
+<img src="[your-image-url](https://github.com/user-attachments/assets/607bb0cb-043c-4148-9376-119e86110f8f)" alt="Image description" width="300" height="300"/>
+![truck_type]() ![signup2](https://github.com/user-attachments/assets/e8b2e722-ab52-4100-b0d1-4705dd571888)
 
 ![signup](https://github.com/user-attachments/assets/ea5f2570-0bd2-42fe-876a-035e21ced85d)
 ![pickup_date_selection](https://github.com/user-attachments/assets/3bc2331e-e17e-4426-8041-189fb74b900d)
