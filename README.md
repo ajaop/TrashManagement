@@ -6,8 +6,27 @@ A mobile app meant to help with disposing and recycling trash
 
 # App Images
 
-![confirm_pickup](https://github.com/user-attachments/assets/f8d991ee-1ce1-4488-9e07-df144a5c7703)
-![dashboard](https://github.com/user-attachments/assets/2a29aec6-355e-41d7-9f78-a78a7ede4448)
+## Onboarding Screen
+![onboarding](https://github.com/user-attachments/assets/259d92cc-7b72-42ce-b5a0-79fa86b8c710)
+
+## Sign Up Screen
+![signup2](https://github.com/user-attachments/assets/e2a89e30-f850-406a-8541-9b1580fad13d)
+![signup](https://github.com/user-attachments/assets/b043a9e4-bf85-4c8c-b57b-032aa0a147a8)
+
+## Dashboard Screen
+![dashboard](https://github.com/user-attachments/assets/9cebd712-27df-4da5-8cdf-9bd192ebabb4)
+
+## Request Pickup Screens
+![map](https://github.com/user-attachments/assets/2d69216e-1f25-4b2d-96ff-4e3b32c96025)
+![truck_type](https://github.com/user-attachments/assets/5dfebbec-ee2d-4e61-ae20-9b8f4dc0baae)
+![pickup_date_selection](https://github.com/user-attachments/assets/f3ef4503-fe71-42fe-a243-7813212f35fa)
+![confirm_pickup](https://github.com/user-attachments/assets/f2c96408-52e2-48be-a924-f6c5a925b170)
+
+## Payment Screen
+![payment](https://github.com/user-attachments/assets/56cf9f1f-ca40-447b-b19d-c07623a52f28)
+
+## Payment Successful Screen
+![payment_successful](https://github.com/user-attachments/assets/a0add043-cbd4-4cd6-99ca-4b2a6acb02de)
 
 
 # Overview
