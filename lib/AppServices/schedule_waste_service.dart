@@ -78,7 +78,7 @@ class ScheduleWasteService {
             fontSize: 17.0,
             fontWeight: FontWeight.w300),
         hint: 'Search Location',
-        textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+        textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
             color: Color(0xff1B3823),
             fontSize: 17.0,
             fontWeight: FontWeight.bold),
@@ -277,7 +277,6 @@ class ScheduleWasteService {
     //calculating distance
     double totalDistance = 0;
     for (var i = 0; i < polylineCoordinates.length - 1; i++) {
-      
       totalDistance += calculateDistance(
           polylineCoordinates[i].latitude,
           polylineCoordinates[i].longitude,

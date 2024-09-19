@@ -107,7 +107,7 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                           Text('Pick-Up Location',
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline6!
+                                  .headlineLarge!
                                   .copyWith(
                                       fontSize: 19.0,
                                       color: Color(0xff1B3823),
@@ -190,7 +190,7 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                                   Text('Use Current Location',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline6!
+                                          .headlineLarge!
                                           .copyWith(
                                               fontSize: 17.0,
                                               color: Color(0xff1B3823),
@@ -260,7 +260,7 @@ class _ScheduleWastePickupState extends State<ScheduleWastePickup> {
                                                     .description,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline6!
+                                                    .headlineLarge!
                                                     .copyWith(
                                                         fontSize: 17.0,
                                                         color:

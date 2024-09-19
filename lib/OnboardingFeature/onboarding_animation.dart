@@ -150,12 +150,15 @@ class OnboardingAnimation extends StatelessWidget {
                 height: 40.0,
               ),
               const Align(
-                alignment: Alignment.center,
+                  alignment: Alignment.center,
                   child: Text(
-                'Be a recycler, Be a saver',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 27.0, fontWeight: FontWeight.w800, ),
-              )),
+                    'Be a recycler, Be a saver',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 27.0,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  )),
               SizedBox(
                 height: 10.0,
               ),
@@ -175,7 +178,7 @@ class OnboardingAnimation extends StatelessWidget {
                 padding: const EdgeInsets.all(20.0),
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF2E5F3B),
+                        backgroundColor: Color(0xFF2E5F3B),
                         minimumSize: const Size.fromHeight(65),
                         textStyle: const TextStyle(
                             color: Colors.white,
@@ -189,7 +192,10 @@ class OnboardingAnimation extends StatelessWidget {
                           MaterialPageRoute(
                               builder: ((context) => const SignUp())));
                     },
-                    child: const Text('Get Started')),
+                    child: const Text(
+                      'Get Started',
+                      style: TextStyle(color: Colors.white),
+                    )),
               )
             ],
           ),

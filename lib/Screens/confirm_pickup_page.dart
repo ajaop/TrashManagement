@@ -46,8 +46,8 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
         widget.pickupDetails.wasteTruck!.amount!, locationProvider.tripCost);
     String formattedTotal = paymentService.formatAmount(totalAmt);
     final CameraPosition initialLoc = CameraPosition(
-      target: LatLng(widget.pickupDetails.locationLat!,
-          widget.pickupDetails.locationLng!),
+      target: LatLng(
+          widget.pickupDetails.locationLat!, widget.pickupDetails.locationLng!),
       zoom: 14.4746,
     );
     final List<Marker> _markers =
@@ -84,7 +84,7 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline5!
+                                    .headlineLarge!
                                     .copyWith(
                                         color: Color(0xff1B3823),
                                         fontWeight: FontWeight.w800)),
@@ -95,7 +95,7 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                 textAlign: TextAlign.left,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline6!
+                                    .headlineLarge!
                                     .copyWith(
                                         color: Color(0xff1B3823),
                                         fontSize: 19.0,
@@ -149,12 +149,11 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                         height: 10.0,
                                       ),
                                       Text(
-                                          widget
-                                              .pickupDetails.locationAddress!,
+                                          widget.pickupDetails.locationAddress!,
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline4!
+                                              .headlineLarge!
                                               .copyWith(
                                                   color: Color(0xff08110B),
                                                   fontSize: 17.0,
@@ -171,7 +170,7 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                 textAlign: TextAlign.left,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline6!
+                                    .headlineLarge!
                                     .copyWith(
                                         color: Color(0xff1B3823),
                                         fontSize: 19.0,
@@ -210,7 +209,8 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                                 .textTheme
                                                 .bodyLarge!
                                                 .copyWith(
-                                                    fontSize: 0.044 * screenWidth,
+                                                    fontSize:
+                                                        0.044 * screenWidth,
                                                     color: Color(0xff08110B),
                                                     fontWeight:
                                                         FontWeight.bold)),
@@ -218,13 +218,14 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                             widget.pickupDetails.wasteTruck!
                                                     .truckMinSize! +
                                                 ' - ' +
-                                                widget.pickupDetails
-                                                    .wasteTruck!.truckMaxSize!,
+                                                widget.pickupDetails.wasteTruck!
+                                                    .truckMaxSize!,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge!
                                                 .copyWith(
-                                                    fontSize: 0.044 * screenWidth,
+                                                    fontSize:
+                                                        0.044 * screenWidth,
                                                     color: Color(0xff08110B),
                                                     fontWeight:
                                                         FontWeight.normal))
@@ -251,7 +252,7 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                 textAlign: TextAlign.left,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline6!
+                                    .headlineLarge!
                                     .copyWith(
                                         color: Color(0xff1B3823),
                                         fontSize: 19.0,
@@ -374,11 +375,11 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                           ),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  primary: Color(0xff19433C),
+                                  backgroundColor: Color(0xff19433C),
                                   minimumSize: const Size.fromHeight(55),
                                   textStyle: Theme.of(context)
                                       .textTheme
-                                      .button!
+                                      .bodyMedium!
                                       .copyWith(
                                           fontSize: 20.0, color: Colors.white)),
                               onPressed: !_loading
@@ -393,7 +394,7 @@ class _ConfirmPickupPageState extends State<ConfirmPickupPage> {
                                           phone,
                                           email,
                                           totalAmt);
-                      
+
                                       setState(() {
                                         _loading = false;
                                       });

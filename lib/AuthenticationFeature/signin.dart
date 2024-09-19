@@ -61,8 +61,8 @@ class _SignInState extends State<SignIn> {
                               'Welcome Back',
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline3!
-                                  .copyWith(
+                                  .headlineLarge
+                                  ?.copyWith(
                                       color: Color(0xff1B3823),
                                       fontWeight: FontWeight.bold),
                             ),
@@ -159,11 +159,11 @@ class _SignInState extends State<SignIn> {
                           ),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  primary: Color(0xff19433C),
+                                  backgroundColor: Color(0xff19433C),
                                   minimumSize: const Size.fromHeight(55),
                                   textStyle: Theme.of(context)
                                       .textTheme
-                                      .button!
+                                      .bodyMedium!
                                       .copyWith(
                                           fontSize: 20.0, color: Colors.white)),
                               onPressed: !_loading
@@ -185,7 +185,8 @@ class _SignInState extends State<SignIn> {
                                       }
                                     }
                                   : null,
-                              child: Text('Sign in')),
+                              child: Text('Sign in',
+                                  style: TextStyle(color: Colors.white))),
                           const SizedBox(
                             height: 10.0,
                           ),
@@ -193,9 +194,12 @@ class _SignInState extends State<SignIn> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text('Dont have an account ?'),
+                              const SizedBox(
+                                width: 10.0,
+                              ),
                               TextButton(
                                   style: TextButton.styleFrom(
-                                      primary: Color(0xff19433C)),
+                                      backgroundColor: Color(0xff19433C)),
                                   onPressed: () {
                                     Navigator.pushReplacement(
                                         context,
@@ -203,7 +207,8 @@ class _SignInState extends State<SignIn> {
                                             builder: ((context) =>
                                                 const SignUp())));
                                   },
-                                  child: const Text('Sign up')),
+                                  child: const Text('Sign up',
+                                      style: TextStyle(color: Colors.white))),
                             ],
                           )
                         ],

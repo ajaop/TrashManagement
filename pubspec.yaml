@@ -34,32 +34,37 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  firebase_core: ^2.15.1
-  firebase_messaging: ^14.6.7
+  firebase_core: ^3.5.0
+  firebase_messaging: ^15.1.2
+
+dependency_overrides:
+  flutter_paystack:
+    git:
+      url: https://github.com/I-driod/flutter_paystack.git
+      ref: master
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  firebase_auth: ^4.9.0
+  firebase_auth: ^5.3.0
   shared_preferences: ^2.0.5
-  firebase_core_platform_interface: ^4.8.0
-  firebase_storage: ^11.2.6
-  cloud_firestore: ^4.9.1
-  flutter_svg: ^2.0.7
-  dropdown_textfield: ^1.0.8
+  firebase_core_platform_interface: ^5.3.0
+  firebase_storage: ^12.3.1
+  cloud_firestore: ^5.4.2
+  flutter_svg: ^2.0.9
+  dropdown_textfield: ^1.2.0
   provider: ^6.0.5
   google_maps_flutter: ^2.5.0
-  geolocator: ^10.0.0
+  geolocator: ^13.0.1
   flutter_google_places_hoc081098: ^1.2.0
-  geocoding: ^2.1.0
+  geocoding: ^3.0.0
   flutter_polyline_points: ^1.0.0
   solar_icons: ^0.0.5
-  phone_number: ^2.0.1
   intl_phone_field: ^3.2.0
   intl: ^0.17.0
   envify_generator: ^2.0.3
   build_runner: ^2.4.6
-  flutter_paystack: ^1.0.5
+  flutter_paystack: ^1.0.7
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -67,7 +72,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.3
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

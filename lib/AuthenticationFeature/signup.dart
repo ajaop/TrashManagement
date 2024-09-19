@@ -69,7 +69,7 @@ class _SignUpState extends State<SignUp> {
                                   titleText,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline3!
+                                      .headlineLarge!
                                       .copyWith(
                                           color: Color(0xff1B3823),
                                           fontWeight: FontWeight.bold),
@@ -96,7 +96,7 @@ class _SignUpState extends State<SignUp> {
                               TextFormField(
                                 controller: _firstNameController,
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.person_outline),
+                                  prefixIcon: const Icon(Icons.person_outline),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -337,11 +337,11 @@ class _SignUpState extends State<SignUp> {
                               ),
                               ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      primary: Color(0xff19433C),
+                                      backgroundColor: Color(0xff19433C),
                                       minimumSize: const Size.fromHeight(55),
                                       textStyle: Theme.of(context)
                                           .textTheme
-                                          .button!
+                                          .bodyMedium!
                                           .copyWith(
                                               fontSize: 20.0,
                                               color: Colors.white)),
@@ -374,7 +374,8 @@ class _SignUpState extends State<SignUp> {
                                           }
                                         }
                                       : null,
-                                  child: Text(buttonText)),
+                                  child: Text(buttonText,
+                                      style: TextStyle(color: Colors.white))),
                               const SizedBox(
                                 height: 10.0,
                               ),
@@ -382,9 +383,13 @@ class _SignUpState extends State<SignUp> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Text("Already have an account ?"),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
                                   TextButton(
                                       style: TextButton.styleFrom(
-                                          primary: Color(0xff19433C)),
+                                        backgroundColor: Color(0xff19433C),
+                                      ),
                                       onPressed: () {
                                         Navigator.pushReplacement(
                                             context,
@@ -392,7 +397,9 @@ class _SignUpState extends State<SignUp> {
                                                 builder: ((context) =>
                                                     const SignIn())));
                                       },
-                                      child: const Text('Sign in')),
+                                      child: const Text('Sign in',
+                                          style:
+                                              TextStyle(color: Colors.white))),
                                 ],
                               )
                             ],

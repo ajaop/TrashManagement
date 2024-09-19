@@ -4,7 +4,8 @@ import 'package:solar_icons/solar_icons.dart';
 import '../Models/payment_details.dart';
 
 class PaymentSuccessful extends StatefulWidget {
-  const PaymentSuccessful({Key? key, required this.paymentDetails}) : super(key: key);
+  const PaymentSuccessful({Key? key, required this.paymentDetails})
+      : super(key: key);
 
   final PaymentDetails paymentDetails;
 
@@ -68,7 +69,7 @@ class _PaymentSuccessfulState extends State<PaymentSuccessful> {
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme
-                              .headline5!
+                              .headlineLarge!
                               .copyWith(
                                   color: Color(0xff1B3823),
                                   fontWeight: FontWeight.bold)),
@@ -111,7 +112,7 @@ class _PaymentSuccessfulState extends State<PaymentSuccessful> {
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme
-                              .headline5!
+                              .headlineLarge!
                               .copyWith(
                                   color: Color(0xff1B3823),
                                   fontSize: 28.0,
@@ -210,14 +211,14 @@ class _PaymentSuccessfulState extends State<PaymentSuccessful> {
                       children: [
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                primary: Color(0xff19433C),
+                                backgroundColor: Color(0xff19433C),
                                 shape: RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15))),
                                 minimumSize: const Size.fromHeight(60),
                                 textStyle: Theme.of(context)
                                     .textTheme
-                                    .button!
+                                    .bodyMedium!
                                     .copyWith(
                                         fontSize: 20.0, color: Colors.white)),
                             onPressed: () {},
@@ -227,7 +228,7 @@ class _PaymentSuccessfulState extends State<PaymentSuccessful> {
                         ),
                         OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                              primary: Color(0xff19433C),
+                              backgroundColor: Color(0xff19433C),
                               side: BorderSide(
                                   width: 1.2, color: Color(0xff19433C)),
                               shape: const RoundedRectangleBorder(
@@ -237,7 +238,7 @@ class _PaymentSuccessfulState extends State<PaymentSuccessful> {
                               minimumSize: const Size.fromHeight(60),
                               textStyle: Theme.of(context)
                                   .textTheme
-                                  .button!
+                                  .bodyMedium!
                                   .copyWith(
                                       fontSize: 20.0, color: Colors.white)),
                           onPressed: () {

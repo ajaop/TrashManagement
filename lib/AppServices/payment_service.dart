@@ -56,7 +56,6 @@ class PaymentService {
     }
   }
 
-
   String _getReference() {
     String platform;
     if (Platform.isIOS) {
@@ -92,7 +91,8 @@ class PaymentService {
     return accessCode;
   }
 
-  Future<void> _verifyOnServer(String reference, double total, PickupDetails pickupDetails) async {
+  Future<void> _verifyOnServer(
+      String reference, double total, PickupDetails pickupDetails) async {
     try {
       Map<String, String> headers = {
         'Content-Type': 'application/json',
@@ -116,19 +116,19 @@ class PaymentService {
             formattedPaymentDate: formattedPaymentDate,
             paymentChannel: channel);
 
-        await databaseService.sendPickupDetailsToDb(pickupDetails, paymentDetails);
-        
+        await databaseService.sendPickupDetailsToDb(
+            pickupDetails, paymentDetails);
+
         if (context.mounted) {
           Navigator.pushAndRemoveUntil<void>(
-          context,
-          MaterialPageRoute<void>(
-              builder: (BuildContext context) => PaymentSuccessful(
-                    paymentDetails: paymentDetails,
-                  )),
-          ModalRoute.withName('/'),
-        );
-        }     
-        
+            context,
+            MaterialPageRoute<void>(
+                builder: (BuildContext context) => PaymentSuccessful(
+                      paymentDetails: paymentDetails,
+                    )),
+            ModalRoute.withName('/'),
+          );
+        }
       } else {
         error('Error Making Payment', _messangerKey);
       }

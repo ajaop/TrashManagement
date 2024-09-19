@@ -172,7 +172,7 @@ class Dashboard extends StatelessWidget {
                         : Text('Hi, ' + userDetails.firstname!.toUpperCase(),
                             style: Theme.of(context)
                                 .textTheme
-                                .headline5!
+                                .headlineLarge!
                                 .copyWith(
                                     color: Color(0xff1B3823),
                                     fontWeight: FontWeight.bold)),
@@ -227,7 +227,7 @@ class Dashboard extends StatelessWidget {
                                         },
                                         style: ElevatedButton.styleFrom(
                                           elevation: 5.0,
-                                          primary: Color(0xff1B3823),
+                                          backgroundColor: Color(0xff1B3823),
                                           minimumSize:
                                               const Size.fromHeight(55),
                                           shape: RoundedRectangleBorder(
@@ -237,7 +237,7 @@ class Dashboard extends StatelessWidget {
                                         child: Text('Schedule Pick-Up',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .button!
+                                                .bodyMedium!
                                                 .copyWith(
                                                     color: Color(0xffEEF7F0),
                                                     fontSize: 16,
@@ -307,7 +307,7 @@ class Dashboard extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .bodyText1!
+                                      .bodyMedium!
                                       .copyWith(
                                           color: Color(0xff1B3823),
                                           fontSize: screenWidth * 0.042,
@@ -353,7 +353,7 @@ class Dashboard extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .bodyText1!
+                                      .bodyMedium!
                                       .copyWith(
                                           color: Color(0xff1B3823),
                                           fontSize: screenWidth * 0.042,

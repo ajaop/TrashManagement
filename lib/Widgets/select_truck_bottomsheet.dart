@@ -73,9 +73,12 @@ class select_truck_bottomsheet extends StatelessWidget {
                 Flexible(
                   child: Text(locationName,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
-                          color: Color(0xff1B3823),
-                          fontWeight: FontWeight.w500)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge!
+                          .copyWith(
+                              color: Color(0xff1B3823),
+                              fontWeight: FontWeight.w500)),
                 )
               ],
             ),
